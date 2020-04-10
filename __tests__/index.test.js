@@ -1,4 +1,4 @@
-import thwack from '../src/index';
+import thwack from '../src';
 
 if (!Object.fromEntries) {
   Object.fromEntries = function ObjectFromEntries(iter) {
@@ -315,5 +315,11 @@ describe('thwack.create(options)', () => {
       statusText: 'ok',
       response: fetch.response,
     });
+  });
+});
+
+describe('thwack.ThwackError', () => {
+  it('is exported', async () => {
+    expect(new thwack.ThwackError('message', {}) instanceof Error).toBe(true);
   });
 });

@@ -4,7 +4,7 @@
     "access": "public",
     "tag": "next"
   },
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0-alpha.1",
   "description": "A tiny modern fetch replacement",
   "main": "dist/thwack.js",
   "umd:main": "dist/thwack.umd.js",
@@ -22,8 +22,8 @@
     "test": "jest --verbose --coverage --silent",
     "test:watch": "jest --watch --runInBand --silent",
     "prebuild": "npm run lint && npm t && rimraf dist",
-    "build": "microbundle --name thwack -o dist/thwack.js --sourcemap false --target web",
-    "dev": "microbundle watch -o dist/thwack.js --sourcemap false --compress false"
+    "build": "microbundle",
+    "dev": "microbundle watch"
   },
   "keywords": [
     "utils",

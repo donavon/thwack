@@ -1,4 +1,4 @@
-# What the heck in Twack!? 💥
+# What the heck is Twack!? 💥
 
 ## TL;DR:
 
@@ -7,6 +7,6 @@
 - Smarter
 - Familiar — Uses a familiar interface
 
-more later...
+More later...
 
 > It's in alpha, so read the source to get started or see the tests! You can also ask me a question [on Twitter](https://twitter.com/donavon).
