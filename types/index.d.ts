@@ -19,7 +19,7 @@ export type Method =
 export interface ThwackOptions {
   method?: Method; // One of the supported HTTP request methods.
   url?: string; // A string containing a URL with optional `:name` params.
-  fetch?: (url: string, options?:) => Promise<Response>; // A function that impliments `window.fetch`. Default = `window.fetch`.
+  fetch?: (url: string) => Promise<Response>; // A function that impliments `window.fetch`. Default = `window.fetch`.
   params?: KeyValue; // A key/value object used for search paramaters.
   data?: any; // The data that you would like to send. Not valid for GET and HEAD methods.
   headers?: KeyValue; // A key/value object used for HTTP headers.
