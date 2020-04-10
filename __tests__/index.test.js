@@ -158,6 +158,15 @@ describe('thwack', () => {
     it('resolves with a parsed JSON object', async () => {
       const fetch = createMockFetch();
       const { data } = await thwack('foo', { fetch });
+      expect(data).toEqual(fooBarData);
+    });
+  });
+  describe('when response is application/json; charset=utf-8', () => {
+    it('resolves with a parsed JSON object', async () => {
+      const fetch = createMockFetch({
+        contentType: 'application/json; charset=utf-8',
+      });
+      const { data } = await thwack('foo', { fetch });
       expect(data).toEqual({ foo: 'bar' });
     });
   });

@@ -36,10 +36,10 @@ const create = (createOptions) => {
     const { status, statusText, headers: responseHeaders } = response;
 
     if (response.ok) {
-      const responseData =
-        response.headers.get(CONTENT_TYPE) === APPLICATION_JSON
-          ? await response.json()
-          : await response.text();
+      const contentType = response.headers.get(CONTENT_TYPE);
+      const responseData = contentType.includes(APPLICATION_JSON)
+        ? await response.json()
+        : await response.text();
 
       return {
         status,
