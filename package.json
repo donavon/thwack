@@ -1,0 +1,59 @@
+{
+  "name": "thwack",
+  "publishConfig": {
+    "access": "public",
+    "tag": "next"
+  },
+  "version": "0.1.0-alpha.0",
+  "description": "A tiny modern fetch replacement",
+  "main": "dist/thwack.js",
+  "umd:main": "dist/thwack.umd.js",
+  "module": "dist/thwack.m.js",
+  "source": "src/index.js",
+  "types": "types/index.d.ts",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/donavon/thwack.git"
+  },
+  "scripts": {
+    "prepublishOnly": "npm run build",
+    "lint": "eslint src",
+    "test": "jest --verbose --coverage --silent",
+    "test:watch": "jest --watch --runInBand --silent",
+    "prebuild": "npm run lint && npm t && rimraf dist",
+    "build": "microbundle --name thwack -o dist/thwack.js --sourcemap false --target web",
+    "dev": "microbundle watch -o dist/thwack.js --sourcemap false --compress false"
+  },
+  "keywords": [
+    "utils",
+    "lib",
+    "fetch",
+    "axios",
+    "xmlhttprequest"
+  ],
+  "author": "Donavon West <github@donavon.com> (https://github.com/donavon)",
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^25.3.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-jest": "^23.8.2",
+    "jest": "^25.3.0",
+    "microbundle": "^0.11.0",
+    "rimraf": "^3.0.2"
+  },
+  "jest": {
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    }
+  }
+}
