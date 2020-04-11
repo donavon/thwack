@@ -63,7 +63,7 @@ describe('thwack', () => {
     const fn = thwack('foo', { fetch });
     expect(fn instanceof Promise).toBe(true);
   });
-  it('thwack(url, options) resolves to a ThwackResponse object', async () => {
+  it('thwack(options) resolves with a ThwackResponse object', async () => {
     const fetch = createMockFetch();
     const data = await thwack('foo', {
       fetch,
@@ -80,25 +80,59 @@ describe('thwack', () => {
       response: fetch.response,
     });
   });
-  it('builds a relative URL with the origin of the window.location', () => {
+  it('thwack(url, options) resolves with a ThwackResponse object', async () => {
+    const fetch = createMockFetch();
+    const data = await thwack({
+      url: 'foo',
+      fetch,
+      foo: 'bar',
+    });
+    expect(fetch).toBeCalledWith('http://localhost/foo', fooBarData);
+    expect(data).toEqual({
+      data: fooBarData,
+      headers: {
+        'content-type': 'application/json',
+      },
+      status: 200,
+      statusText: 'ok',
+      response: fetch.response,
+    });
+  });
+  it('can be passed a relative URL with the origin of the window.location', () => {
     const fetch = createMockFetch();
     thwack('foo', { fetch });
     expect(fetch).toBeCalledWith('http://localhost/foo', {});
   });
-  it('builds a absolute URL', () => {
+  it('can be passed a fully qualified URL', () => {
     const fetch = createMockFetch();
     thwack('http://donavon.com/', { fetch });
     expect(fetch).toBeCalledWith('http://donavon.com/', {});
   });
-  it('builds a URL with params in the URL', () => {
+  it('can be passed a URL with params in the URL (ex: "/order/:id")', () => {
     const fetch = createMockFetch();
     thwack('http://donavon.com/foo/:id', { fetch, params: { id: 123 } });
     expect(fetch).toBeCalledWith('http://donavon.com/foo/123', {});
   });
-  it('builds a URL with params as a search query', () => {
+  it('can be passed a URL with params which build them as a search query', () => {
     const fetch = createMockFetch();
     thwack('http://donavon.com/foo', { fetch, params: { id: 123 } });
     expect(fetch).toBeCalledWith('http://donavon.com/foo?id=123', {});
+  });
+  it('can be passed a URL with an existing search query (ex: "/order?a=456")', () => {
+    const fetch = createMockFetch();
+    thwack('http://donavon.com/foo?a=456', { fetch, params: { id: 123 } });
+    expect(fetch).toBeCalledWith('http://donavon.com/foo?a=456&id=123', {});
+  });
+  it('sorts param keys when building search query', () => {
+    const fetch = createMockFetch();
+    thwack('http://donavon.com/foo?foo=foo', {
+      fetch,
+      params: { b: 'b', c: 'c', a: 'a' },
+    });
+    expect(fetch).toBeCalledWith(
+      'http://donavon.com/foo?foo=foo&a=a&b=b&c=c',
+      {}
+    );
   });
   it('defaults to POST is data is present and method not specified', async () => {
     const fetch = createMockFetch();
@@ -224,7 +258,7 @@ describe('thwack', () => {
 describe('thwack convenience functions', () => {
   // eslint-disable-next-line no-restricted-syntax
   for (const method of ['post', 'put', 'patch']) {
-    it(`thwack.${method}(name, data, options) defaults to ${method.toUpperCase()} and resolves to data`, async () => {
+    it(`thwack.${method}(name, data, options) defaults to ${method.toUpperCase()} and resolves with a ThwackResponse object`, async () => {
       const fetch = createMockFetch();
       const data = await thwack[method]('foo', 'data', { fetch });
       expect(fetch).toBeCalledWith('http://localhost/foo', {
@@ -232,23 +266,39 @@ describe('thwack convenience functions', () => {
         body: JSON.stringify('data'),
         method,
       });
-      expect(data).toEqual(fooBarData);
+      expect(data).toEqual({
+        data: fooBarData,
+        headers: {
+          'content-type': 'application/json',
+        },
+        status: 200,
+        statusText: 'ok',
+        response: fetch.response,
+      });
     });
   }
 
   // eslint-disable-next-line no-restricted-syntax
   for (const method of ['get', 'delete', 'head']) {
-    it(`thwack.${method}(name, options) defaults to ${method.toUpperCase()} and resolves to data`, async () => {
+    it(`thwack.${method}(name, options) defaults to ${method.toUpperCase()} and resolves with a ThwackResponse object`, async () => {
       const fetch = createMockFetch();
       const data = await thwack[method]('foo', { fetch });
       expect(fetch).toBeCalledWith('http://localhost/foo', {
         method,
       });
-      expect(data).toEqual(fooBarData);
+      expect(data).toEqual({
+        data: fooBarData,
+        headers: {
+          'content-type': 'application/json',
+        },
+        status: 200,
+        statusText: 'ok',
+        response: fetch.response,
+      });
     });
   }
 
-  it('thwack.request(options) resolves to a ThwackResponse object', async () => {
+  it('thwack.request(options) resolves with a ThwackResponse object', async () => {
     const fetch = createMockFetch();
     const data = await thwack.request({
       url: 'foo',
