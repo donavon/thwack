@@ -75,6 +75,7 @@ const create = (createOptions) => {
       (await thwack(url, { ...options, data, method })).data;
   });
   thwack.create = create;
+  thwack.ThwackError = ThwackError;
 
   return thwack;
 };
