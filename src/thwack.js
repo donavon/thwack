@@ -1,18 +1,11 @@
-import defaultOptions from './defaultOptions';
+import { defaultOptions, APPLICATION_JSON, CONTENT_TYPE } from './defaults';
 import ThwackError from './ThwackError';
 import buildUrl from './utils/buildUrl';
 import deepSpreadOptions from './utils/deepSpreadOptions';
-
-const CONTENT_TYPE = 'content-type';
-const APPLICATION_JSON = 'application/json';
+import computeParser from './utils/computeParser';
 
 const create = (createOptions) => {
-  const thwack = async (...args) => {
-    if (args.length === 2) {
-      const [url, options] = args;
-      return thwack({ ...options, url });
-    }
-
+  const request = async (options) => {
     const {
       url,
       fetch,
@@ -20,8 +13,9 @@ const create = (createOptions) => {
       data,
       headers,
       params,
+      parserMap,
       ...rest
-    } = deepSpreadOptions(defaultOptions, createOptions, args[0]);
+    } = deepSpreadOptions(defaultOptions, createOptions, options);
 
     if (data) {
       headers[CONTENT_TYPE] = headers[CONTENT_TYPE] || APPLICATION_JSON;
@@ -41,10 +35,9 @@ const create = (createOptions) => {
     const { status, statusText, headers: responseHeaders } = response;
 
     if (response.ok) {
-      const contentType = response.headers.get(CONTENT_TYPE);
-      const responseData = contentType.includes(APPLICATION_JSON)
-        ? await response.json()
-        : await response.text();
+      const contentTypeHeader = response.headers.get(CONTENT_TYPE);
+      const responseParser = computeParser(contentTypeHeader, parserMap);
+      const responseData = await response[responseParser]();
 
       return {
         status,
@@ -68,6 +61,16 @@ const create = (createOptions) => {
     throw thwackError;
   };
 
+  const thwack = async (...args) => {
+    if (args.length > 1) {
+      const [url, options] = args;
+      return request({ ...options, url });
+    }
+    const [options] = args;
+    return request(options);
+  };
+
+  // Apply convenience methods
   ['get', 'delete', 'head'].forEach((method) => {
     thwack[method] = async (url, options) =>
       thwack({ ...options, method, url });
@@ -78,7 +81,7 @@ const create = (createOptions) => {
       thwack({ ...options, method, url, data });
   });
 
-  thwack.request = thwack;
+  thwack.request = request;
   thwack.create = create;
   thwack.ThwackError = ThwackError;
 

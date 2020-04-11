@@ -1,4 +1,13 @@
 import thwack from '../src';
+import { defaultOptions } from '../src/defaults';
+
+const { headers: defaultHeaders } = defaultOptions;
+const defaultBaseUrl = 'http://localhost/';
+const fooBarData = { foo: 'bar' };
+const defaultFetchOptions = {
+  ...fooBarData,
+  headers: defaultHeaders,
+};
 
 if (!Object.fromEntries) {
   Object.fromEntries = function ObjectFromEntries(iter) {
@@ -27,8 +36,6 @@ if (!Object.fromEntries) {
     return obj;
   };
 }
-
-const fooBarData = { foo: 'bar' };
 
 const createMockFetch = (options = {}) => {
   const {
@@ -69,7 +76,7 @@ describe('thwack', () => {
       fetch,
       foo: 'bar',
     });
-    expect(fetch).toBeCalledWith('http://localhost/foo', fooBarData);
+    expect(fetch).toBeCalledWith(`${defaultBaseUrl}foo`, defaultFetchOptions);
     expect(data).toEqual({
       data: fooBarData,
       headers: {
@@ -87,7 +94,7 @@ describe('thwack', () => {
       fetch,
       foo: 'bar',
     });
-    expect(fetch).toBeCalledWith('http://localhost/foo', fooBarData);
+    expect(fetch).toBeCalledWith(`${defaultBaseUrl}foo`, defaultFetchOptions);
     expect(data).toEqual({
       data: fooBarData,
       headers: {
@@ -101,27 +108,37 @@ describe('thwack', () => {
   it('can be passed a relative URL with the origin of the window.location', () => {
     const fetch = createMockFetch();
     thwack('foo', { fetch });
-    expect(fetch).toBeCalledWith('http://localhost/foo', {});
+    expect(fetch).toBeCalledWith(`${defaultBaseUrl}foo`, {
+      headers: defaultHeaders,
+    });
   });
   it('can be passed a fully qualified URL', () => {
     const fetch = createMockFetch();
     thwack('http://donavon.com/', { fetch });
-    expect(fetch).toBeCalledWith('http://donavon.com/', {});
+    expect(fetch).toBeCalledWith('http://donavon.com/', {
+      headers: defaultHeaders,
+    });
   });
   it('can be passed a URL with params in the URL (ex: "/order/:id")', () => {
     const fetch = createMockFetch();
     thwack('http://donavon.com/foo/:id', { fetch, params: { id: 123 } });
-    expect(fetch).toBeCalledWith('http://donavon.com/foo/123', {});
+    expect(fetch).toBeCalledWith('http://donavon.com/foo/123', {
+      headers: defaultHeaders,
+    });
   });
   it('can be passed a URL with params which build them as a search query', () => {
     const fetch = createMockFetch();
     thwack('http://donavon.com/foo', { fetch, params: { id: 123 } });
-    expect(fetch).toBeCalledWith('http://donavon.com/foo?id=123', {});
+    expect(fetch).toBeCalledWith('http://donavon.com/foo?id=123', {
+      headers: defaultHeaders,
+    });
   });
   it('can be passed a URL with an existing search query (ex: "/order?a=456")', () => {
     const fetch = createMockFetch();
     thwack('http://donavon.com/foo?a=456', { fetch, params: { id: 123 } });
-    expect(fetch).toBeCalledWith('http://donavon.com/foo?a=456&id=123', {});
+    expect(fetch).toBeCalledWith('http://donavon.com/foo?a=456&id=123', {
+      headers: defaultHeaders,
+    });
   });
   it('sorts param keys when building search query', () => {
     const fetch = createMockFetch();
@@ -129,22 +146,21 @@ describe('thwack', () => {
       fetch,
       params: { b: 'b', c: 'c', a: 'a' },
     });
-    expect(fetch).toBeCalledWith(
-      'http://donavon.com/foo?foo=foo&a=a&b=b&c=c',
-      {}
-    );
+    expect(fetch).toBeCalledWith('http://donavon.com/foo?foo=foo&a=a&b=b&c=c', {
+      headers: defaultHeaders,
+    });
   });
   it('defaults to POST is data is present and method not specified', async () => {
     const fetch = createMockFetch();
     await thwack('foo', { method: 'foo', fetch, data: fooBarData });
-    expect(fetch).toBeCalledWith('http://localhost/foo', {
-      headers: { 'content-type': 'application/json' },
+    expect(fetch).toBeCalledWith(`${defaultBaseUrl}foo`, {
+      headers: { 'content-type': 'application/json', ...defaultHeaders },
       body: JSON.stringify(fooBarData),
       method: 'foo',
     });
     await thwack('foo', { fetch, data: fooBarData });
-    expect(fetch).toBeCalledWith('http://localhost/foo', {
-      headers: { 'content-type': 'application/json' },
+    expect(fetch).toBeCalledWith(`${defaultBaseUrl}foo`, {
+      headers: { 'content-type': 'application/json', ...defaultHeaders },
       body: JSON.stringify(fooBarData),
       method: 'post',
     });
@@ -156,8 +172,8 @@ describe('thwack', () => {
       headers: { 'content-type': 'text/plain' },
       data: 'this is plain text',
     });
-    expect(fetch).toBeCalledWith('http://localhost/foo', {
-      headers: { 'content-type': 'text/plain' },
+    expect(fetch).toBeCalledWith(`${defaultBaseUrl}foo`, {
+      headers: { 'content-type': 'text/plain', ...defaultHeaders },
       body: 'this is plain text',
       method: 'post',
     });
@@ -166,8 +182,8 @@ describe('thwack', () => {
       headers: { 'content-type': 'application/json' },
       data: fooBarData,
     });
-    expect(fetch).toBeCalledWith('http://localhost/foo', {
-      headers: { 'content-type': 'application/json' },
+    expect(fetch).toBeCalledWith(`${defaultBaseUrl}foo`, {
+      headers: { 'content-type': 'application/json', ...defaultHeaders },
       body: JSON.stringify(fooBarData),
       method: 'post',
     });
@@ -181,8 +197,8 @@ describe('thwack', () => {
       data: 'this is plain text',
       method: 'FOO',
     });
-    expect(fetch).toBeCalledWith('http://localhost/foo', {
-      headers: { 'content-type': 'text/plain' },
+    expect(fetch).toBeCalledWith(`${defaultBaseUrl}foo`, {
+      headers: { 'content-type': 'text/plain', ...defaultHeaders },
       body: 'this is plain text',
       method: 'FOO',
     });
@@ -194,6 +210,14 @@ describe('thwack', () => {
       const { data } = await thwack('foo', { fetch });
       expect(data).toEqual(fooBarData);
     });
+    it('resolves with a text if options.parserMap says it should use "text"', async () => {
+      const fetch = createMockFetch();
+      const { data } = await thwack('foo', {
+        fetch,
+        parserMap: { 'application/json': 'text' },
+      });
+      expect(data).toEqual('text');
+    });
   });
   describe('when response is application/json; charset=utf-8', () => {
     it('resolves with a parsed JSON object', async () => {
@@ -201,7 +225,7 @@ describe('thwack', () => {
         contentType: 'application/json; charset=utf-8',
       });
       const { data } = await thwack('foo', { fetch });
-      expect(data).toEqual({ foo: 'bar' });
+      expect(data).toEqual(fooBarData);
     });
   });
   describe('when response is NOT application/json', () => {
@@ -261,8 +285,8 @@ describe('thwack convenience functions', () => {
     it(`thwack.${method}(name, data, options) defaults to ${method.toUpperCase()} and resolves with a ThwackResponse object`, async () => {
       const fetch = createMockFetch();
       const data = await thwack[method]('foo', 'data', { fetch });
-      expect(fetch).toBeCalledWith('http://localhost/foo', {
-        headers: { 'content-type': 'application/json' },
+      expect(fetch).toBeCalledWith(`${defaultBaseUrl}foo`, {
+        headers: { 'content-type': 'application/json', ...defaultHeaders },
         body: JSON.stringify('data'),
         method,
       });
@@ -283,7 +307,8 @@ describe('thwack convenience functions', () => {
     it(`thwack.${method}(name, options) defaults to ${method.toUpperCase()} and resolves with a ThwackResponse object`, async () => {
       const fetch = createMockFetch();
       const data = await thwack[method]('foo', { fetch });
-      expect(fetch).toBeCalledWith('http://localhost/foo', {
+      expect(fetch).toBeCalledWith(`${defaultBaseUrl}foo`, {
+        headers: defaultHeaders,
         method,
       });
       expect(data).toEqual({
@@ -305,7 +330,7 @@ describe('thwack convenience functions', () => {
       fetch,
       foo: 'bar',
     });
-    expect(fetch).toBeCalledWith('http://localhost/foo', fooBarData);
+    expect(fetch).toBeCalledWith(`${defaultBaseUrl}foo`, defaultFetchOptions);
     expect(data).toEqual({
       data: fooBarData,
       headers: {
@@ -328,7 +353,7 @@ describe('thwack.create(options)', () => {
       fetch,
       foo: 'bar',
     });
-    expect(fetch).toBeCalledWith('http://one.com/foo', fooBarData);
+    expect(fetch).toBeCalledWith('http://one.com/foo', defaultFetchOptions);
     expect(data).toEqual({
       data: fooBarData,
       headers: {
@@ -346,7 +371,7 @@ describe('thwack.create(options)', () => {
       fetch,
       foo: 'bar',
     });
-    expect(fetch).toBeCalledWith('http://two.com/foo', fooBarData);
+    expect(fetch).toBeCalledWith('http://two.com/foo', defaultFetchOptions);
     expect(data).toEqual({
       data: fooBarData,
       headers: {
@@ -364,7 +389,7 @@ describe('thwack.create(options)', () => {
       fetch,
       foo: 'bar',
     });
-    expect(fetch).toBeCalledWith('http://localhost/foo', fooBarData);
+    expect(fetch).toBeCalledWith(`${defaultBaseUrl}foo`, defaultFetchOptions);
     expect(data).toEqual({
       data: fooBarData,
       headers: {
