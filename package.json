@@ -4,7 +4,7 @@
     "access": "public",
     "tag": "next"
   },
-  "version": "0.1.0-alpha.3",
+  "version": "0.1.0-alpha.4",
   "description": "A tiny modern fetch replacement",
   "main": "dist/thwack.js",
   "umd:main": "dist/thwack.umd.js",
