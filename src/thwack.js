@@ -7,16 +7,21 @@ const CONTENT_TYPE = 'content-type';
 const APPLICATION_JSON = 'application/json';
 
 const create = (createOptions) => {
-  const thwack = async (urlArgument, options) => {
+  const thwack = async (...args) => {
+    if (args.length === 2) {
+      const [url, options] = args;
+      return thwack({ ...options, url });
+    }
+
     const {
-      url = urlArgument,
+      url,
       fetch,
       baseURL,
       data,
       headers,
       params,
       ...rest
-    } = deepSpreadOptions(defaultOptions, createOptions, options);
+    } = deepSpreadOptions(defaultOptions, createOptions, args[0]);
 
     if (data) {
       headers[CONTENT_TYPE] = headers[CONTENT_TYPE] || APPLICATION_JSON;
@@ -63,17 +68,17 @@ const create = (createOptions) => {
     throw thwackError;
   };
 
-  thwack.request = async (options) => thwack(undefined, options);
-
   ['get', 'delete', 'head'].forEach((method) => {
     thwack[method] = async (url, options) =>
-      (await thwack(url, { ...options, method })).data;
+      thwack({ ...options, method, url });
   });
 
   ['put', 'post', 'patch'].forEach((method) => {
     thwack[method] = async (url, data, options) =>
-      (await thwack(url, { ...options, data, method })).data;
+      thwack({ ...options, method, url, data });
   });
+
+  thwack.request = thwack;
   thwack.create = create;
   thwack.ThwackError = ThwackError;
 
