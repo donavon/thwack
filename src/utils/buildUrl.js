@@ -1,3 +1,5 @@
+import sortByEntry from './sortByEntry';
+
 // Builds a complete URL from a URL, a base URL, and a query object
 //
 // For example:
@@ -25,9 +27,11 @@ const buildUrl = (url, baseUrl, query) => {
     .join('/');
 
   // build query string from remaining keys in mutatedQuery
-  Object.entries(mutatedQuery).forEach((pair) => {
-    newUrl.searchParams.set(...pair);
-  });
+  Object.entries(mutatedQuery)
+    .sort(sortByEntry)
+    .forEach((pair) => {
+      newUrl.searchParams.set(...pair);
+    });
 
   return newUrl.href;
 };
