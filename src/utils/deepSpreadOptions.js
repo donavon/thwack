@@ -1,13 +1,8 @@
 const isObject = (obj) =>
   Object.prototype.toString.call(obj) === '[object Object]';
 
-const deepSpreadOptions = (
-  defaultOptions = {},
-  createOptions = {},
-  options = {}
-) => {
+const deepSpreadOptions = (createOptions = {}, options = {}) => {
   const allkeys = Object.keys({
-    ...defaultOptions,
     ...createOptions,
     ...options,
   });
@@ -15,9 +10,9 @@ const deepSpreadOptions = (
   const combined = {};
 
   allkeys.forEach((key) => {
-    const value = options[key] || createOptions[key] || defaultOptions[key];
+    const value = options[key] || createOptions[key];
     combined[key] = isObject(value)
-      ? deepSpreadOptions(defaultOptions[key], createOptions[key], options[key])
+      ? deepSpreadOptions(createOptions[key], options[key])
       : value;
   });
 

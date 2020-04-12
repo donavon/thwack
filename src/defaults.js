@@ -18,4 +18,5 @@ export const defaultOptions = {
 export const defaultParserMap = {
   [APPLICATION_JSON]: 'json',
   'multipart/form-data': 'formData',
+  '*/*': 'text',
 };

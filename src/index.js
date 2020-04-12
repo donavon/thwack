@@ -1,4 +1,4 @@
-import create from './thwack';
+import create from './create';
 import { defaultOptions } from './defaults';
 
 const mainInstance = create(defaultOptions);

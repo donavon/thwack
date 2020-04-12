@@ -7,7 +7,9 @@
     "object-curly-newline": "off",
     "operator-linebreak": 0,
     "comma-dangle": 0,
-    "implicit-arrow-linebreak": "off"
+    "implicit-arrow-linebreak": "off",
+    "no-confusing-arrow": "off",
+    "no-sparse-arrays": "off"
   },
   "env": {
     "browser": true

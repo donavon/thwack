@@ -45,6 +45,7 @@ const createMockFetch = (options = {}) => {
     contentType = 'application/json',
     jsonResult = fooBarData,
     textResult = 'text',
+    body = '(stream)',
   } = options;
 
   const response = {
@@ -57,6 +58,7 @@ const createMockFetch = (options = {}) => {
     },
     json: async () => jsonResult,
     text: async () => textResult,
+    body,
   };
 
   const fetch = jest.fn(() => Promise.resolve(response));
@@ -210,13 +212,29 @@ describe('thwack', () => {
       const { data } = await thwack('foo', { fetch });
       expect(data).toEqual(fooBarData);
     });
-    it('resolves with a text if options.parserMap says it should use "text"', async () => {
+    it('resolves with a text if options.responseParserMap says it should use "text"', async () => {
       const fetch = createMockFetch();
       const { data } = await thwack('foo', {
         fetch,
-        parserMap: { 'application/json': 'text' },
+        responseParserMap: { 'application/json': 'text' },
       });
       expect(data).toEqual('text');
+    });
+    it('resolves with a text if responseType = "text"', async () => {
+      const fetch = createMockFetch();
+      const { data } = await thwack('foo', {
+        fetch,
+        responseType: 'text',
+      });
+      expect(data).toEqual('text');
+    });
+    it('resolves with a stream if responseType = "stream"', async () => {
+      const fetch = createMockFetch();
+      const { data } = await thwack('foo', {
+        fetch,
+        responseType: 'stream',
+      });
+      expect(data).toEqual('(stream)');
     });
   });
   describe('when response is application/json; charset=utf-8', () => {
@@ -402,8 +420,14 @@ describe('thwack.create(options)', () => {
   });
 });
 
+describe('thwack.getUri', () => {
+  it('is exposed on the instance', () => {
+    expect(thwack.getUri({ url: 'foo' })).toBe(`${defaultBaseUrl}foo`);
+  });
+});
+
 describe('thwack.ThwackError', () => {
-  it('is exported', async () => {
+  it('is exported', () => {
     expect(new thwack.ThwackError('message', {}) instanceof Error).toBe(true);
   });
 });

@@ -3,8 +3,8 @@ import { defaultParserMap } from '../src/defaults';
 
 const testMap = {
   'foo/bar': 'foobar',
-  foo: 'foo',
-  default: 'default',
+  'foo/*': 'foo',
+  '*/*': 'default',
 };
 
 describe('computeParser', () => {
@@ -29,11 +29,11 @@ describe('computeParser', () => {
     const res = computeParser('foo', testMap);
     expect(res).toBe('foo');
   });
-  it('defaults to the category if specic not found (ex: "application/json" => "application"', () => {
+  it('defaults to the category if specic type not found (ex: "application/json" => "application/*"', () => {
     const res = computeParser('foo/baz', testMap);
     expect(res).toBe('foo');
   });
-  it('respects the `default` key in the parser map', () => {
+  it('respects the `*/*` key in the parser map', () => {
     const res = computeParser('blah', testMap);
     expect(res).toBe('default');
   });

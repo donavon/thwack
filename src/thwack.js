@@ -1,91 +1,79 @@
-import { defaultOptions, APPLICATION_JSON, CONTENT_TYPE } from './defaults';
+import { APPLICATION_JSON, CONTENT_TYPE } from './defaults';
 import ThwackError from './ThwackError';
 import buildUrl from './utils/buildUrl';
-import deepSpreadOptions from './utils/deepSpreadOptions';
 import computeParser from './utils/computeParser';
+import compatParser from './utils/compatParser';
+import computeContentType from './utils/computeContentType';
 
-const create = (createOptions) => {
-  const request = async (options) => {
-    const {
-      url,
-      fetch,
-      baseURL,
-      data,
-      headers,
-      params,
-      parserMap,
-      ...rest
-    } = deepSpreadOptions(defaultOptions, createOptions, options);
+const getUri = (options) => {
+  const { url, baseURL, baseUrl = baseURL, params } = options;
+  return buildUrl(url, baseUrl, params);
+};
 
-    if (data) {
-      headers[CONTENT_TYPE] = headers[CONTENT_TYPE] || APPLICATION_JSON;
-    }
-    const body =
-      data && headers[CONTENT_TYPE] === APPLICATION_JSON
-        ? JSON.stringify(data)
-        : data;
-    const fetchUrl = buildUrl(url, baseURL, params);
-    const fetchOptions = {
-      ...(Object.keys(headers).length !== 0 && { headers }), // add if not empty object
-      ...(!!body && { body, method: 'post' }), // if body not empty add it and default method to POST
-      ...rest,
-    };
+const thwack = async (options) => {
+  const {
+    url,
+    fetch,
+    baseURL, // eat the baseUrl so it's not in rest
+    // eslint-disable-next-line no-unused-vars
+    baseUrl = baseURL,
+    data,
+    headers,
+    params,
+    responseParserMap,
+    responseType,
+    ...rest
+  } = options;
 
-    const response = await fetch(fetchUrl, fetchOptions);
-    const { status, statusText, headers: responseHeaders } = response;
+  if (data) {
+    headers[CONTENT_TYPE] = headers[CONTENT_TYPE] || computeContentType(data);
+  }
+  const body =
+    data && headers[CONTENT_TYPE] === APPLICATION_JSON
+      ? JSON.stringify(data)
+      : data;
+  const fetchUrl = getUri(options);
+  const fetchOptions = {
+    ...(Object.keys(headers).length !== 0 && { headers }), // add if not empty object
+    ...(!!body && { body, method: 'post' }), // if body not empty add it and default method to POST
+    ...rest,
+  };
 
-    if (response.ok) {
-      const contentTypeHeader = response.headers.get(CONTENT_TYPE);
-      const responseParser = computeParser(contentTypeHeader, parserMap);
-      const responseData = await response[responseParser]();
+  const response = await fetch(fetchUrl, fetchOptions);
+  const { status, statusText, headers: responseHeaders } = response;
 
-      return {
-        status,
-        statusText,
-        headers: Object.fromEntries(responseHeaders.entries()),
-        data: responseData,
-        response,
-      };
-    }
+  if (response.ok) {
+    const contentTypeHeader = response.headers.get(CONTENT_TYPE);
+    const responseParserType =
+      responseType || computeParser(contentTypeHeader, responseParserMap);
+    const compatResponseParserType = compatParser(responseParserType);
+    const responseData =
+      compatResponseParserType === 'stream'
+        ? response.body
+        : await response[compatResponseParserType]();
 
-    // if not OK then throw with text of body as the message
-    const message = await response.text();
-
-    const thwackError = new ThwackError(message, {
+    return {
       status,
       statusText,
       headers: Object.fromEntries(responseHeaders.entries()),
+      data: responseData,
       response,
-    });
+    };
+  }
 
-    throw thwackError;
-  };
+  // if not OK then throw with text of body as the message
+  const message = await response.text();
 
-  const thwack = async (...args) => {
-    if (args.length > 1) {
-      const [url, options] = args;
-      return request({ ...options, url });
-    }
-    const [options] = args;
-    return request(options);
-  };
-
-  // Apply convenience methods
-  ['get', 'delete', 'head'].forEach((method) => {
-    thwack[method] = async (url, options) =>
-      thwack({ ...options, method, url });
+  const thwackError = new ThwackError(message, {
+    status,
+    statusText,
+    headers: Object.fromEntries(responseHeaders.entries()),
+    response,
   });
 
-  ['put', 'post', 'patch'].forEach((method) => {
-    thwack[method] = async (url, data, options) =>
-      thwack({ ...options, method, url, data });
-  });
-
-  thwack.request = request;
-  thwack.create = create;
-  thwack.ThwackError = ThwackError;
-
-  return thwack;
+  throw thwackError;
 };
 
-export default create;
+thwack.getUri = getUri;
+
+export default thwack;

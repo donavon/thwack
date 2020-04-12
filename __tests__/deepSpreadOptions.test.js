@@ -1,24 +1,22 @@
 import deepSpreadOptions from '../src/utils/deepSpreadOptions';
 
 const cases = [
-  [undefined, undefined, undefined, {}],
-  [{ a: 'a' }, { a: 'b' }, { a: 'c' }, { a: 'c' }],
-  [undefined, { a: 'b' }, { a: 'c' }, { a: 'c' }],
-  [{ a: 'a' }, undefined, { a: 'c' }, { a: 'c' }],
-  [{ a: 'a' }, { a: 'b' }, undefined, { a: 'b' }],
-  [{ a: 'a' }, { b: 'b' }, { c: 'c' }, { a: 'a', b: 'b', c: 'c' }],
-  [{ a: { a: 'a' } }, { a: 'b' }, { a: 'c' }, { a: 'c' }],
-  [{ a: 'a' }, { a: 'b' }, { a: { a: 'c' } }, { a: { 0: 'b', a: 'c' } }],
-  [{ a: { a: 'a' } }, { a: { a: 'b' } }, { a: { a: 'c' } }, { a: { a: 'c' } }],
-  [{ a: { a: 'a' } }, {}, {}, { a: { a: 'a' } }],
-  [{ a: { a: 'a' } }, { a: { a: 'b' } }, {}, { a: { a: 'b' } }],
-  [{ a: { a: 'a' } }, { a: { b: 'b' } }, {}, { a: { a: 'a', b: 'b' } }],
+  [undefined, undefined, {}],
+  [{ a: 'b' }, { a: 'c' }, { a: 'c' }],
+  [undefined, { a: 'c' }, { a: 'c' }],
+  [{ a: 'b' }, undefined, { a: 'b' }],
+  [{ b: 'b' }, { c: 'c' }, { b: 'b', c: 'c' }],
+  [{ a: { a: 'a' } }, { a: 'b' }, { a: 'b' }],
+  [{ a: 'b' }, { a: { a: 'c' } }, { a: { 0: 'b', a: 'c' } }],
+  [{ a: { a: 'b' } }, { a: { a: 'c' } }, { a: { a: 'c' } }],
+  [{ a: { a: 'b' } }, {}, { a: { a: 'b' } }],
+  [{ a: { a: 'a' } }, { a: { b: 'b' } }, { a: { a: 'a', b: 'b' } }],
 ];
 
 describe('deepSpreadOptions', () => {
-  cases.forEach(([a, b, c, expectedResult]) => {
-    it('works just fine', () => {
-      const result = deepSpreadOptions(a, b, c);
+  cases.forEach(([a, b, expectedResult], idx) => {
+    it(`works just fine - ${idx}`, () => {
+      const result = deepSpreadOptions(a, b);
       expect(result).toEqual(expectedResult);
     });
   });
