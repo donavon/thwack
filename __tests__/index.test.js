@@ -78,7 +78,6 @@ describe('thwack', () => {
       fetch,
       foo: 'bar',
     });
-    expect(fetch).toBeCalledWith(`${defaultBaseUrl}foo`, defaultFetchOptions);
     expect(data).toEqual({
       data: fooBarData,
       headers: {
@@ -429,5 +428,44 @@ describe('thwack.getUri', () => {
 describe('thwack.ThwackError', () => {
   it('is exported', () => {
     expect(new thwack.ThwackError('message', {}) instanceof Error).toBe(true);
+  });
+});
+
+describe('thwack EventTarget', () => {
+  describe('calling addEventListener', () => {
+    it('has its callback called with options before calling fetch', async () => {
+      const fetch = createMockFetch();
+      const callback = jest.fn();
+      thwack.addEventListener('request', callback);
+      const data = await thwack('foo', {
+        fetch,
+        foo: 'bar',
+      });
+      thwack.removeEventListener('request', callback);
+      expect(callback).toHaveBeenCalledTimes(1);
+      // expect(callback).toBeCalledWith({});
+      expect(fetch).toBeCalledWith(`${defaultBaseUrl}foo`, defaultFetchOptions);
+      expect(data).toEqual({
+        data: fooBarData,
+        headers: {
+          'content-type': 'application/json',
+        },
+        status: 200,
+        statusText: 'ok',
+        response: fetch.response,
+      });
+    });
+  });
+  describe('calling removeEventListener', () => {
+    it('is properly removed', async () => {
+      const fetch = createMockFetch();
+      const callback = jest.fn();
+      thwack.addEventListener('request', callback);
+      await thwack('foo', { fetch });
+      expect(callback).toHaveBeenCalledTimes(1);
+      thwack.removeEventListener('request', callback);
+      await thwack('foo', { fetch });
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
   });
 });

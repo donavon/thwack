@@ -1,6 +1,6 @@
-import create from './create';
+import Thwack from './Thwack';
 import { defaultOptions } from './defaults';
 
-const mainInstance = create(defaultOptions);
+const mainInstance = new Thwack(defaultOptions);
 
 export default mainInstance;

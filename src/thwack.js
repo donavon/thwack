@@ -1,79 +1,76 @@
-import { APPLICATION_JSON, CONTENT_TYPE } from './defaults';
+import request from './request';
+import combineOptions from './utils/combineOptions';
 import ThwackError from './ThwackError';
 import buildUrl from './utils/buildUrl';
-import computeParser from './utils/computeParser';
-import compatParser from './utils/compatParser';
-import computeContentType from './utils/computeContentType';
+import resolveOptionsFromArgs from './utils/resolveOptionsFromArgs';
 
-const getUri = (options) => {
-  const { url, baseURL, baseUrl = baseURL, params } = options;
-  return buildUrl(url, baseUrl, params);
-};
+export default class Thwack {
+  constructor(defaultOptions, parent) {
+    const instance = (...args) =>
+      instance.request(resolveOptionsFromArgs(args));
 
-const thwack = async (options) => {
-  const {
-    url,
-    fetch,
-    baseURL, // eat the baseUrl so it's not in rest
-    // eslint-disable-next-line no-unused-vars
-    baseUrl = baseURL,
-    data,
-    headers,
-    params,
-    responseParserMap,
-    responseType,
-    ...rest
-  } = options;
+    instance._parent = parent;
+    instance.defaultOptions = defaultOptions;
+    instance.ThwackError = ThwackError;
 
-  if (data) {
-    headers[CONTENT_TYPE] = headers[CONTENT_TYPE] || computeContentType(data);
-  }
-  const body =
-    data && headers[CONTENT_TYPE] === APPLICATION_JSON
-      ? JSON.stringify(data)
-      : data;
-  const fetchUrl = getUri(options);
-  const fetchOptions = {
-    ...(Object.keys(headers).length !== 0 && { headers }), // add if not empty object
-    ...(!!body && { body, method: 'post' }), // if body not empty add it and default method to POST
-    ...rest,
-  };
-
-  const response = await fetch(fetchUrl, fetchOptions);
-  const { status, statusText, headers: responseHeaders } = response;
-
-  if (response.ok) {
-    const contentTypeHeader = response.headers.get(CONTENT_TYPE);
-    const responseParserType =
-      responseType || computeParser(contentTypeHeader, responseParserMap);
-    const compatResponseParserType = compatParser(responseParserType);
-    const responseData =
-      compatResponseParserType === 'stream'
-        ? response.body
-        : await response[compatResponseParserType]();
-
-    return {
-      status,
-      statusText,
-      headers: Object.fromEntries(responseHeaders.entries()),
-      data: responseData,
-      response,
+    instance._listeners = {
+      request: [],
+      response: [],
     };
+
+    instance.request = request.bind(instance);
+
+    // bind all Thwack methods to instance
+    const methods = Object.getOwnPropertyNames(
+      this.constructor.prototype
+    ).filter((m) => m !== 'constructor');
+    methods.forEach((methodName) => {
+      instance[methodName] = this[methodName].bind(instance);
+    });
+
+    // Create convenience methods on this instance
+    ['get', 'delete', 'head'].forEach((method) => {
+      instance[method] = (url, options) =>
+        instance.request({ ...options, method, url });
+    });
+
+    ['put', 'post', 'patch'].forEach((method) => {
+      instance[method] = (url, data, options) =>
+        instance.request({ ...options, method, url, data });
+    });
+
+    return instance;
   }
 
-  // if not OK then throw with text of body as the message
-  const message = await response.text();
+  getUri(options) {
+    const { url, baseURL, params } = combineOptions(this, options);
+    return buildUrl(url, baseURL, params);
+  }
 
-  const thwackError = new ThwackError(message, {
-    status,
-    statusText,
-    headers: Object.fromEntries(responseHeaders.entries()),
-    response,
-  });
+  create(options) {
+    const createOptions = combineOptions(this, options);
+    return new Thwack(createOptions, this);
+  }
 
-  throw thwackError;
-};
+  addEventListener(type, callback) {
+    this._listeners[type].push(callback);
+  }
 
-thwack.getUri = getUri;
+  removeEventListener(type, callback) {
+    this._listeners[type] = this._listeners[type].filter(
+      (listener) => listener !== callback
+    );
+  }
 
-export default thwack;
+  dispatchEvent(type, options) {
+    const parentOptions = this._parent
+      ? this._parent.dispatchEvent(type, options)
+      : options;
+
+    const stack = [...this._listeners[type]];
+    return stack.reduce(
+      (opts, listener) => listener(opts) || opts,
+      parentOptions
+    );
+  }
+}

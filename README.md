@@ -164,3 +164,32 @@ See this example running on [CodeSandbox]().
 > Note that this works for other things besides images.
 
 As you can see, using `responseParserMap` is a great way to eliminate the need to set `responseType` for different Thwack calls.
+
+## How to
+
+### How to log every API call
+
+Make a file module (here called `api.js`). IN the file create a Thwack instance, setting any `options` that you need throughout your app.
+
+Then, add an `addEventListener('request', callback)` and export the instance.
+
+```js
+import thwack from 'thwack';
+
+const api = thwack.create({
+  baseURL: 'https://example.com/api/',
+});
+
+api.addEventListener('request', (options) => {
+  console.log('hitting URL', api.getUri(options));
+});
+
+export default api;
+```
+
+Then, whenever you want to fetch in your app, import the Thwack instance from `api.js`.
+
+```js
+```
+
+Because you setup an `eventListener` in `api.js`, your `callback` function every time that any place in the app

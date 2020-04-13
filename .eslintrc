@@ -9,7 +9,11 @@
     "comma-dangle": 0,
     "implicit-arrow-linebreak": "off",
     "no-confusing-arrow": "off",
-    "no-sparse-arrays": "off"
+    "no-sparse-arrays": "off",
+    "lines-between-class-members": "off",
+    "no-plusplus": "off",
+    "func-names": "off",
+    "no-underscore-dangle": "off"
   },
   "env": {
     "browser": true
