@@ -13,7 +13,10 @@
     "lines-between-class-members": "off",
     "no-plusplus": "off",
     "func-names": "off",
-    "no-underscore-dangle": "off"
+    "no-underscore-dangle": "off",
+    "no-void": "off",
+    "no-return-assign": "off",
+    "no-throw-literal": "off"
   },
   "env": {
     "browser": true

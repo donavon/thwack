@@ -1,8 +1,9 @@
 import request from './request';
 import combineOptions from './utils/combineOptions';
-import ThwackError from './ThwackError';
+import ThwackResponseError from './ThwackErrors/ThwackResponseError';
 import buildUrl from './utils/buildUrl';
 import resolveOptionsFromArgs from './utils/resolveOptionsFromArgs';
+import ThwackStopPropagationError from './ThwackErrors/ThwackStopPropagationError';
 
 export default class Thwack {
   constructor(defaultOptions, parent) {
@@ -11,7 +12,7 @@ export default class Thwack {
 
     instance._parent = parent;
     instance.defaultOptions = defaultOptions;
-    instance.ThwackError = ThwackError;
+    instance.ThwackResponseError = ThwackResponseError;
 
     instance._listeners = {
       request: [],
@@ -62,15 +63,22 @@ export default class Thwack {
     );
   }
 
-  dispatchEvent(type, options) {
-    const parentOptions = this._parent
-      ? this._parent.dispatchEvent(type, options)
-      : options;
+  dispatchEvent(initialEvent) {
+    const dispatchInstanceEvent = (instance, event) => {
+      if (instance._parent) {
+        dispatchInstanceEvent(instance._parent, event);
+      }
+      const stack = [...instance._listeners[event.type]];
+      stack.forEach((listener) => listener(event));
+    };
 
-    const stack = [...this._listeners[type]];
-    return stack.reduce(
-      (opts, listener) => listener(opts) || opts,
-      parentOptions
-    );
+    try {
+      dispatchInstanceEvent(this, initialEvent);
+    } catch (ex) {
+      if (!(ex instanceof ThwackStopPropagationError)) {
+        throw ex;
+      }
+    }
+    return !initialEvent.defaultPrevented;
   }
 }

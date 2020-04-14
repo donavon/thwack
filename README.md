@@ -1,64 +1,92 @@
 <p align="center">
-    <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79187770-35b40c00-7deb-11ea-851a-7e33f4dd4ab1.png" width="600">
+    <img alt="Thwack logo" src="https://repository-images.githubusercontent.com/254701245/b63c3200-7e16-11ea-872e-0f25e8045568" width="600">
 </p>
 
-<p align="center">
-The tiny, modern data fetching solution for web apps.
-</p>
+<h1 align="center">
+Thwack. A tiny, modern data fetching solution
+</h1>
 
 <p align="center">
   <a href="https://www.npmjs.com/package/thwack"><img src="https://img.shields.io/npm/v/thwack.svg?style=flat-square"></a>
   <a href="https://travis-ci.com/donavon/thwack"><img src="https://img.shields.io/travis/donavon/thwack/master.svg?style=flat-square"></a>
 </p>
 
-# What the heck is Twack!?
+<h2>
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+What the heck is Twack!? TL;DR:
+</h2>
+
+- 💻 Modern - Thwack is an HTTP data fetching solution build for modern browsers
+- 🔎 Small — Thwack is only ~1.5k gzipped
+- 👩‍🏫 Smarter — Built with modern JavaScript
+- 😘 Familiar — Thwack uses an Axios-like interface
+
+> This README is a work in progress. Thwack is in alpha, so read the source to get started or see the tests! You can also ask me a question [on Twitter](https://twitter.com/donavon).
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
-TL;DR:
+Installation
 </h2>
 
-- 💻 Modern - Thwack is a HTTP data fetching solution build for modern browsers
-- 🔎 Small — Thwack is only ~1.3k gzipped
-- 👩‍🏫 Smarter — (say something here)
-- 😘 Familiar — Thwack uses an Axios-like interface
+```bash
+$ npm i thwack
+```
 
-This README is a work in progress. More later...
+or
 
-> It's in alpha, so read the source to get started or see the tests! You can also ask me a question [on Twitter](https://twitter.com/donavon).
+```bash
+$ yarn add thwack
+```
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
 Why Thwack over Axios?
 </h2>
 
-Axios was great when it was released. It gave us a promise based wrapper around `XMLHttpRequest`, which was hard to use. But that was 5 years ago and times have changed.
+Axios was great when it was released back in the day. It gave us a promise based wrapper around `XMLHttpRequest`, which was difficult to use. But that was along time ago and times have changed — browsers have gotten smarter. Maybe it's time for your data fetching solution to keep up?
 
-Thwack is built for modern browsers and because of that it doesn't have the baggage that axios has. Axios weighs in at around ~5k gzipped. Thwack, on the other hand, is a slender ~1.3k.
+Thwack was built from the ground up with modern browsers in mind. Because of this, it doesn't have the baggage that Axios has. Axios weighs in at around ~5k gzipped. Thwack, on the other hand, is a slender ~1.5k.
 
-They support the same API, but there are some differenced — mainly around `options` — but for the most part, they should be able to be used interchangably for many applications.
+They support the same API, but there are some differenced — mainly around `options` — but for the most part, they should be able to be used interchangeably for many applications.
 
-Thwack doesn't try to solve every problem like axios does, but instead provides the solution for 98% of what users really need.
+Thwack doesn't try to solve every problem, like Axios does, but instead provides the solution for 98% of what users _really_ need. This is what gives Thwack its feather-light footprint.
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
 Methods
 </h2>
 
+### Data fetching
+
 - `thwack(url: string [,options: ThwackOptions]): Promise<ThwackResponse>`
+
 - `thwack.request(options: ThwackOptions): Promise<ThwackResponse>`
 - `thwack.get(url: string [,options: ThwackOptions]): Promise<ThwackResponse>`
+
 - `thwack.delete(url: string [,options: ThwackOptions]): Promise<ThwackResponse>`
+
 - `thwack.head(url: string [,options: ThwackOptions]): Promise<ThwackResponse>`
+
 - `thwack.post(url: string, data:any [,options: ThwackOptions]): Promise<ThwackResponse>`
+
 - `thwack.put(url: string, data:any [,options: ThwackOptions]): Promise<ThwackResponse>`
+
 - `thwack.patch(url: string, data:any [,options: ThwackOptions]): Promise<ThwackResponse>`
 
+### Utility
+
 - `thwack.create(options: ThwackOptions): ThwackInstance`
+  Creates a new child instance of the current Thwack instance with the given `options`.
+
 - `thwack.getUri(options: ThwackOptions): string`
 
-- `thwack.addEventListener(type: string, callback: Function<ThwackOptions>): void`
-- `thwack.removeEventListener(type: string, callback: Function<ThwackOptions>): void`
+### Event listeners
+
+For more information on Thwack's event system, see [Thwack events](#thwack-events) below.
+
+- `thwack.addEventListener(type: string, callback: Function<ThwackEvent>): void`
+
+- `thwack.removeEventListener(type: string, callback: Function<ThwackEvent>): void`
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
@@ -73,7 +101,7 @@ This is either a fully qualified or a relative URL.
 
 ### `baseURL`
 
-Defines a base URL that will be used to build a fully qualified url from `url` above. Defaults to the `origin` + `pathname` of the current web page.
+Defines a base URL that will be used to build a fully qualified URL from `url` above. Defaults to the `origin` + `pathname` of the current web page.
 
 For example, if you did this:
 
@@ -97,7 +125,7 @@ If the `method` is `post`, `put`, or `patch`, this is the data that will be used
 
 ### `headers`
 
-This is where you can place any optional HTTP request headers. Any header you spwecify here are merged in with any instance header values.
+This is where you can place any optional HTTP request headers. Any header you specify here are merged in with any instance header values.
 
 For example, if we set a Thwack instance like this:
 
@@ -129,7 +157,7 @@ some-other-header': 'My Awesome App'
 
 ### `params`
 
-This is an optional object that contains the key/value pairs that will be used to build the fetch URL. Is there are any `:key` segments of the `baseURL` or the `url`, they will be replaced with the value of the maything key. For example, if you did this:
+This is an optional object that contains the key/value pairs that will be used to build the fetch URL. Is there are any `:key` segments of the `baseURL` or the `url`, they will be replaced with the value of the matching key. For example, if you did this:
 
 ```js
 thwack('orders/:id', {
@@ -144,22 +172,22 @@ the fetched URL will be:
 http://example.com/orders/123
 ```
 
-If you don't specify a `:name`, or there are more `param`s than there are `:name`s, then the remaining key/values will be set as search parmameters (i.e. `?key=value`).
+If you don't specify a `:name`, or there are more `param`s than there are `:name`s, then the remaining key/values will be set as search parameters (i.e. `?key=value`).
 
 ### `responseType`
 
-By default, Thwack will automatically determine how to decode the response data based on the value of the response header `content-type`. However, if the server responds with an incorect value, you can override the parser by setting `responseType`. Valid values are `arraybuffer`, `document` (i.e. `formdata`), `json`, `text`, `stream`, and `blob`. Defaults to automatic.
+By default, Thwack will automatically determine how to decode the response data based on the value of the response header `content-type`. However, if the server responds with an incorrect value, you can override the parser by setting `responseType`. Valid values are `arraybuffer`, `document` (i.e. `formdata`), `json`, `text`, `stream`, and `blob`. Defaults to automatic.
 
-What is returned by Thwack is determined by the following table. The "fetch method" column is what is resolved in `data`. If you do not specify a `responseType`, Thwack with automatically determine the fetch method based on `content-type` and the `responseParserMap` table (se below).
+What is returned by Thwack is determined by the following table. The "fetch method" column is what is resolved in `data`. If you do not specify a `responseType`, Thwack with automatically determine the fetch method based on `content-type` and the `responseParserMap` table (see below).
 
-|     Content-Type      | `responseType` |                 `fetch` method                 |
-| :-------------------: | :------------: | :--------------------------------------------: |
-|  `application/json`   |     `json`     |               `response.json()`                |
-| `multipart/form-data` |   `formdata`   |             `response.formData()`              |
-|                       |    `stream`    | passes back `response.body` without processing |
-|                       |     `blob`     |               `response.blob()`                |
-|                       | `arraybuffer`  |            `response.arrayBuffer()`            |
-|         `*.*`         |     `text`     |               `response.text()`                |
+|     Content-Type      | `responseType` |                      `fetch` method                      |
+| :-------------------: | :------------: | :------------------------------------------------------: |
+|  `application/json`   |     `json`     |                    `response.json()`                     |
+| `multipart/form-data` |   `formdata`   |                  `response.formData()`                   |
+|                       |    `stream`    | passes back `response.body` as `data` without processing |
+|                       |     `blob`     |                    `response.blob()`                     |
+|                       | `arraybuffer`  |                 `response.arrayBuffer()`                 |
+|         `*.*`         |     `text`     |                    `response.text()`                     |
 
 ### `responseParserMap`
 
@@ -211,25 +239,95 @@ As you can see, using `responseParserMap` is a great way to eliminate the need t
 ThwackResponse
 </h2>
 
-[coming soon, but i't similar to axios's response]
+### `status`
+
+A `number` representing the 3 digit [HTTP status codes](https://en.wikipedia.org/wiki/List_of_HTTP_status_codes) that was received.
+
+- 1xx - Informational response
+- 2xx - Success
+- 3xx - Redirection
+- 4xx - Client errors
+- 5xx - Server errors
+
+### `ok`
+
+A `boolean` set to true is the `status` code in the 2xx range (i.e. a success). If the promist resolves successfully, this value will always be `true`. If the request has a status outside of the 2xx range hwack will throw a `ThwackResponseError` and `ok` will be false.
+
+### `statusText`
+
+A `string` representing the text of the `status` code. You should use the `status` code (or `ok`) in any program logic.
+
+### `headers`
+
+A `key/value object with the returned HTTP headers. Any duplicate headers will be concatenated into a single header separated by semicolons.
+
+### `data`
+
+This will hold the returned body of the HTTP response after it has been streamed and converted. The only exception is if you used the `responseType` of `stream`, in which case `data` is set directly to the `body` element.
+
+If a `ThwackResponseError` was thrown, `data` will be the plain text representation of the response body.
+
+### `response`
+
+The complete HTTP `Response` object as returned by `fetch`.
+
+<h2>
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+ThwackResponseError
+</h2>
+
+If the response from a Thwack request results in a non-2xx `status` code (e.g. 404 Not Found) then a `ThwackResponseError` is thrown.
+
+> Note: It is possible that other types of errors could be thrown (e.g. a bad event listener callback), so it is a best practice to interogate the caught error to see if it is of type `ThwackResponseError`.
+
+```js
+try {
+  const { data } = await thwack.get(someUrl)
+} catch (ex) {
+  if (ex instanceof thwach.ThwackResponseError)
+    const { status, message } = ex;
+    console.log(`Thwack status ${status}: ${message}`);
+  } else {
+    throw ex; // If not, rethrow the error
+  }
+}
+```
+
+A `ThwackResponseError` has all of the properties of a normal JavaScript `Error` plus a `thwackResponse` property with the same properties as a success status.
+
+## message
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
 Instances
 </h2>
 
-Instance created in Thwack are based on the parent instance. A parents's default options pass down through the instances. This can come in handy for setting up options in the parent that can effect the children, such as `baseURL`,
+Instances created in Thwack are based on the parent instance. A parents's default options pass down through the instances. This can come in handy for setting up options in the parent that can effect the children, such as `baseURL`,
 
 Inversely, parents can use `addEventListener` to monitor their children (see the [How to log every API call](#how-to-log-every-api-call) below for an example of this).
 
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79186980-06040480-7de9-11ea-8362-a5b187d231b8.png" width="476">
+<img alt="flow char" src="https://user-images.githubusercontent.com/887639/79186980-06040480-7de9-11ea-8362-a5b187d231b8.png" width="476">
+
+<h2>
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+Thwack events
+</h2>
+
+Combined with instances, the Thwack event system is what makes Thwack extremely powerful. With it, you can listen for different events.
+
+### The `request` event
+
+Whenever any part of the application calls one of the data fetching methods, a `request` event is fired. Any listeners will get a `ThwackRequestEvent` object which has the `options` of the call in `event.options`. These event listeners can do something as simple as ([log the event](#log-every-request)) or as complicated as preventing the request and returning a response with ([mock data](#return-mock-data))
+
+```js
+```
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
 How to
 </h2>
 
-### How to log every API call
+### Log every request
 
 Make a file module (here called `api.js`). IN the file create a Thwack instance, setting any `options` that you need throughout your app.
 
@@ -242,30 +340,84 @@ const api = thwack.create({
   baseURL: 'https://example.com/api/',
 });
 
-api.addEventListener('request', (options) => {
-  console.log('hitting URL', api.getUri(options));
+api.addEventListener('request', (event) => {
+  console.log('hitting URL', api.getUri(event.options));
 });
 
 export default api;
 ```
 
-Then, whenever you want to fetch in your app, import the Thwack instance from `api.js`.
+Then, whenever you want to fetch data in your app, import the Thwack instance from `api.js` instead of directly from Thwack.
+
+Because you setup an event listener in `api.js`, your `callback` function executes every time that your app makes a request.
+
+### Return mock data
+
+Let's say you have an app that has made a request for some user data. If the app is hitting a specific URL (say `users`) and querying for a particular user ID (say `123`), you would like to prevent the request from hitting the server and instead mock the results.
+
+We will, again, use the approach where we create an `api.js` module. Within this module we will add the following event listener.
 
 ```js
-```
+api.addEventListener('request', (event) => {
+  const { options } = event;
+  if (options.url === 'users' && options.params.id === 123) {
 
-Because you setup an `eventListener` in `api.js`, your `callback` function executes every time that your app makes an API call.
+    // the caller's request will be resolved to this `ThwackResponse`
+    event.promise = Promise.resolve({
+      status: 200,
+      ok: true
+      headers: {
+        'content-type': 'application/json',
+      },
+      data: {
+        name: 'Fake Username',
+        email: 'fakeuser@example.com',
+      }
+    });
+
+    // tells Thwack to return `event.promise` instead of handling the event itself
+    event.preventDefault();
+    // stop other listeners (if any) from processing
+    event.stopPropagation();
+  }
+});
+```
 
 ### Load an Image as a Blog
 
 See this example on [CodeSandbox](https://codesandbox.io/s/thwack-demo-load-image-as-blob-x0rnl?file=/src/ImageBlob/useBlobUrl.js)
+
+### Selective routing
+
+Rght now you have a REST endpoint at `https://api.example.com`. Suppose you've published a new REST endpoint o a different URL and would like to start slowly routing 2% of network traffic to these new servers.
+
+> Note: normally this would be handled by your load balancer on the back-end. It's shown here for demonstration purposes only.
+
+We could accomplish this by replacing `options.url` in the request event listener as follows.
+
+```js
+api.addEventListener('request', (event) => {
+
+  if (Math.random() >= 0.02) {
+    return;
+  }
+
+  // the code will be executed for approximately 2% of the requests
+  const { options } = event;
+  const oldUrl = api.getUri(options);
+  const url = new URL('', oldUrl);
+  url.origin = 'https://api2.example.com'; // point the origin at the new servers
+  consy newUrl = url.href; // Get the fully qualified URL
+  event.options = { ...event.options, url: newUrl }; // replace `options`]
+});
+```
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
 Credits
 </h2>
 
-Thwack is **heavily** inspired by the [axios](https://github.com/axios/axios). Thanks [Matt](https://twitter.com/mzabriskie)!
+Thwack is **heavily** inspired by the [Axios](https://github.com/Axios/Axios). Thanks [Matt](https://twitter.com/mzabriskie)!
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
