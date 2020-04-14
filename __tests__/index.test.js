@@ -437,6 +437,34 @@ describe('thwack.getUri', () => {
   it('is exposed on the instance', () => {
     expect(thwack.getUri({ url: 'foo' })).toBe(`${defaultBaseUrl}foo`);
   });
+  it('works with a fully qualified URL', () => {
+    expect(thwack.getUri({ url: 'http://fully-qualified.com/bar' })).toBe(
+      'http://fully-qualified.com/bar'
+    );
+  });
+  it('works with a fully qualified URL on a child instance', () => {
+    const instance = thwack.create({ baseURL: 'http:/api.example.com' });
+    expect(instance.getUri({ url: 'http://fully-qualified.com/bar' })).toBe(
+      'http://fully-qualified.com/bar'
+    );
+  });
+  it('works from within an event listener on a parent instance', async () => {
+    let eventUrl;
+    const instance = thwack.create({
+      baseURL: 'https://example.com/api/',
+    });
+    instance.addEventListener('request', (event) => {
+      const { options } = event;
+      eventUrl = thwack.getUri(options);
+    });
+    const fetch = createMockFetch();
+    await instance('foo/:id', {
+      fetch,
+      foo: 'bar',
+      params: { id: 123 },
+    });
+    expect(eventUrl).toBe('https://example.com/api/foo/123');
+  });
 });
 
 describe('thwack.ThwackResponseError', () => {
@@ -519,7 +547,7 @@ describe('thwack EventTarget', () => {
     });
     it('exceptions in callbacks make it out to the process what called request', async () => {
       const fetch = createMockFetch();
-      const callback1 = jest.fn((e) => {
+      const callback1 = jest.fn(() => {
         throw new Error('boo!');
       });
       const callback2 = jest.fn((e) => {

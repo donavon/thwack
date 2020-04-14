@@ -7,6 +7,8 @@ import ThwackStopPropagationError from './ThwackErrors/ThwackStopPropagationErro
 
 export default class Thwack {
   constructor(defaultOptions, parent) {
+    // accepts (url, options) or just (options), but calls
+    // this.request with just (options)
     const instance = (...args) =>
       instance.request(resolveOptionsFromArgs(args));
 

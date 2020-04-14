@@ -1,8 +1,10 @@
 import ThwackStopPropagationError from '../ThwackErrors/ThwackStopPropagationError';
+// https://medium.com/@zandaqo/eventtarget-the-future-of-javascript-event-systems-205ae32f5e6b
 
-export default class ThwackEvent extends Event {
+export default class ThwackEvent /* extends EventTarget */ {
   constructor(type) {
-    super(type);
+    // super(type);
+    this.type = type;
     Object.defineProperty(this, 'defaultPrevented', {
       value: this.defaultPrevented,
       writable: true,

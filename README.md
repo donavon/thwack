@@ -119,6 +119,8 @@ http://example.com/foo
 
 ### `method`
 
+A string containing one of the following HTTP methods: `get`, `post`, `put`, `patch`, `delete`, or `head`.
+
 ### `data`
 
 If the `method` is `post`, `put`, or `patch`, this is the data that will be used to build the request body.
