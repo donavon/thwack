@@ -1,9 +1,9 @@
 <p align="center">
-    <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79183562-cab10800-7ddf-11ea-92a8-e82fae0b6c82.png" width="600">
+    <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79187770-35b40c00-7deb-11ea-851a-7e33f4dd4ab1.png" width="600">
 </p>
 
 <p align="center">
-The tiny modern data fetching solution for browsers.
+The tiny, modern data fetching solution for web apps.
 </p>
 
 <p align="center">
@@ -11,25 +11,25 @@ The tiny modern data fetching solution for browsers.
   <a href="https://travis-ci.com/donavon/thwack"><img src="https://img.shields.io/travis/donavon/thwack/master.svg?style=flat-square"></a>
 </p>
 
-# 💥 What the heck is Twack!? 💥
+# What the heck is Twack!?
 
-<h2 name="tldr">
+<h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
 TL;DR:
 </h2>
 
-- It's a modern HTTP data fetching
-- Small — ~1.3k gzipped
-- Smarter — (say something here)
-- Familiar — Uses an Axios-like interface
+- 💻 Modern - Thwack is a HTTP data fetching solution build for modern browsers
+- 🔎 Small — Thwack is only ~1.3k gzipped
+- 👩‍🏫 Smarter — (say something here)
+- 😘 Familiar — Thwack uses an Axios-like interface
 
 This README is a work in progress. More later...
 
 > It's in alpha, so read the source to get started or see the tests! You can also ask me a question [on Twitter](https://twitter.com/donavon).
 
-<h2 name="why">
+<h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
-Why Thwack over axios?
+Why Thwack over Axios?
 </h2>
 
 Axios was great when it was released. It gave us a promise based wrapper around `XMLHttpRequest`, which was hard to use. But that was 5 years ago and times have changed.
@@ -38,7 +38,9 @@ Thwack is built for modern browsers and because of that it doesn't have the bagg
 
 They support the same API, but there are some differenced — mainly around `options` — but for the most part, they should be able to be used interchangably for many applications.
 
-<h2 name="methods">
+Thwack doesn't try to solve every problem like axios does, but instead provides the solution for 98% of what users really need.
+
+<h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
 Methods
 </h2>
@@ -58,9 +60,9 @@ Methods
 - `thwack.addEventListener(type: string, callback: Function<ThwackOptions>): void`
 - `thwack.removeEventListener(type: string, callback: Function<ThwackOptions>): void`
 
-<h2 name="tldr">
+<h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
-Options
+ThwackOptions
 </h2>
 
 The `options` argument has the following properties.
@@ -167,8 +169,8 @@ Thwack uses the following map as the default, which allows `json` and `formdata`
 
 ```json
 {
-  "application/json": "json",         // ex: { "foo": 123, "bar": 456 }
-  "multipart/form-data": "formdata",  // ex: foo=123&bar=456
+  "application/json": "json",
+  "multipart/form-data": "formdata",
   ".default": "text"
 };
 ```
@@ -204,7 +206,25 @@ See this example running on [CodeSandbox]().
 
 As you can see, using `responseParserMap` is a great way to eliminate the need to set `responseType` for different Thwack calls.
 
-<h2 name="how-to">
+<h2>
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+ThwackResponse
+</h2>
+
+[coming soon, but i't similar to axios's response]
+
+<h2>
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+Instances
+</h2>
+
+Instance created in Thwack are based on the parent instance. A parents's default options pass down through the instances. This can come in handy for setting up options in the parent that can effect the children, such as `baseURL`,
+
+Inversely, parents can use `addEventListener` to monitor their children (see the [How to log every API call](#how-to-log-every-api-call) below for an example of this).
+
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79186980-06040480-7de9-11ea-8362-a5b187d231b8.png" width="476">
+
+<h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
 How to
 </h2>
@@ -234,20 +254,20 @@ Then, whenever you want to fetch in your app, import the Thwack instance from `a
 ```js
 ```
 
-Because you setup an `eventListener` in `api.js`, your `callback` function every time that any place in the app
+Because you setup an `eventListener` in `api.js`, your `callback` function executes every time that your app makes an API call.
 
 ### Load an Image as a Blog
 
 See this example on [CodeSandbox](https://codesandbox.io/s/thwack-demo-load-image-as-blob-x0rnl?file=/src/ImageBlob/useBlobUrl.js)
 
-<h2 name="credits">
+<h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
 Credits
 </h2>
 
 Thwack is **heavily** inspired by the [axios](https://github.com/axios/axios). Thanks [Matt](https://twitter.com/mzabriskie)!
 
-<h2 name="license">
+<h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
 License
 </h2>
