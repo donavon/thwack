@@ -1,4 +1,5 @@
 import ThwackStopPropagationError from '../ThwackErrors/ThwackStopPropagationError';
+
 export default class ThwackEvent extends Event {
   constructor(type) {
     super(type);
