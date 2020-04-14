@@ -1,7 +1,5 @@
 <p align="center">
-  <a href="https://reach.tech/router/">
-    <img alt="Reach Router" src="https://user-images.githubusercontent.com/887639/79183562-cab10800-7ddf-11ea-92a8-e82fae0b6c82.png" width="600">
-  </a>
+    <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79183562-cab10800-7ddf-11ea-92a8-e82fae0b6c82.png" width="600">
 </p>
 
 <p align="center">
@@ -15,7 +13,10 @@ The tiny modern data fetching solution for browsers.
 
 # 💥 What the heck is Twack!? 💥
 
-## TL;DR:
+<h2 name="tldr">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+TL;DR:
+</h2>
 
 - It's a modern HTTP data fetching
 - Small — ~1.3k gzipped
@@ -26,7 +27,10 @@ This README is a work in progress. More later...
 
 > It's in alpha, so read the source to get started or see the tests! You can also ask me a question [on Twitter](https://twitter.com/donavon).
 
-## Why Thwack over axios?
+<h2 name="why">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+Why Thwack over axios?
+</h2>
 
 Axios was great when it was released. It gave us a promise based wrapper around `XMLHttpRequest`, which was hard to use. But that was 5 years ago and times have changed.
 
@@ -34,7 +38,10 @@ Thwack is built for modern browsers and because of that it doesn't have the bagg
 
 They support the same API, but there are some differenced — mainly around `options` — but for the most part, they should be able to be used interchangably for many applications.
 
-## Methods
+<h2 name="methods">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+Methods
+</h2>
 
 - `thwack(url: string [,options: ThwackOptions]): Promise<ThwackResponse>`
 - `thwack.request(options: ThwackOptions): Promise<ThwackResponse>`
@@ -51,7 +58,10 @@ They support the same API, but there are some differenced — mainly around `opt
 - `thwack.addEventListener(type: string, callback: Function<ThwackOptions>): void`
 - `thwack.removeEventListener(type: string, callback: Function<ThwackOptions>): void`
 
-## Options
+<h2 name="tldr">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+Options
+</h2>
 
 The `options` argument has the following properties.
 
@@ -194,7 +204,10 @@ See this example running on [CodeSandbox]().
 
 As you can see, using `responseParserMap` is a great way to eliminate the need to set `responseType` for different Thwack calls.
 
-## How to
+<h2 name="how-to">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+How to
+</h2>
 
 ### How to log every API call
 
@@ -227,10 +240,16 @@ Because you setup an `eventListener` in `api.js`, your `callback` function every
 
 See this example on [CodeSandbox](https://codesandbox.io/s/thwack-demo-load-image-as-blob-x0rnl?file=/src/ImageBlob/useBlobUrl.js)
 
-## Credits
+<h2 name="credits">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+Credits
+</h2>
 
 Thwack is **heavily** inspired by the [axios](https://github.com/axios/axios). Thanks [Matt](https://twitter.com/mzabriskie)!
 
-## License
+<h2 name="license">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+License
+</h2>
 
 [MIT](LICENSE)
