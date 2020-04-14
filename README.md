@@ -284,7 +284,7 @@ If the response from a Thwack request results in a non-2xx `status` code (e.g. 4
 try {
   const { data } = await thwack.get(someUrl)
 } catch (ex) {
-  if (ex instanceof thwach.ThwackResponseError)
+  if (ex instanceof thwack.ThwackResponseError)
     const { status, message } = ex;
     console.log(`Thwack status ${status}: ${message}`);
   } else {
@@ -294,8 +294,6 @@ try {
 ```
 
 A `ThwackResponseError` has all of the properties of a normal JavaScript `Error` plus a `thwackResponse` property with the same properties as a success status.
-
-## message
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
@@ -320,7 +318,13 @@ Combined with instances, the Thwack event system is what makes Thwack extremely 
 Whenever any part of the application calls one of the data fetching methods, a `request` event is fired. Any listeners will get a `ThwackRequestEvent` object which has the `options` of the call in `event.options`. These event listeners can do something as simple as ([log the event](#log-every-request)) or as complicated as preventing the request and returning a response with ([mock data](#return-mock-data))
 
 ```js
+// callback will be called for every request made in Thwack
+thwack.addEventListener('request', callback);
 ```
+
+### The `response` event
+
+> [not implimented yet]
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
@@ -329,36 +333,22 @@ How to
 
 ### Log every request
 
-Make a file module (here called `api.js`). IN the file create a Thwack instance, setting any `options` that you need throughout your app.
-
-Then, add an `addEventListener('request', callback)` and export the instance.
+Add an `addEventListener('request', callback)` and log each request to the console.
 
 ```js
 import thwack from 'thwack';
 
-const api = thwack.create({
-  baseURL: 'https://example.com/api/',
+thwack.addEventListener('request', (event) => {
+  console.log('hitting URL', thwack.getUri(event.options));
 });
-
-api.addEventListener('request', (event) => {
-  console.log('hitting URL', api.getUri(event.options));
-});
-
-export default api;
 ```
-
-Then, whenever you want to fetch data in your app, import the Thwack instance from `api.js` instead of directly from Thwack.
-
-Because you setup an event listener in `api.js`, your `callback` function executes every time that your app makes a request.
 
 ### Return mock data
 
 Let's say you have an app that has made a request for some user data. If the app is hitting a specific URL (say `users`) and querying for a particular user ID (say `123`), you would like to prevent the request from hitting the server and instead mock the results.
 
-We will, again, use the approach where we create an `api.js` module. Within this module we will add the following event listener.
-
 ```js
-api.addEventListener('request', (event) => {
+thwack.addEventListener('request', (event) => {
   const { options } = event;
   if (options.url === 'users' && options.params.id === 123) {
 
@@ -377,7 +367,8 @@ api.addEventListener('request', (event) => {
 
     // tells Thwack to return `event.promise` instead of handling the event itself
     event.preventDefault();
-    // stop other listeners (if any) from processing
+
+    // stop other listeners (if any) from further processing
     event.stopPropagation();
   }
 });
@@ -396,7 +387,7 @@ Rght now you have a REST endpoint at `https://api.example.com`. Suppose you've p
 We could accomplish this by replacing `options.url` in the request event listener as follows.
 
 ```js
-api.addEventListener('request', (event) => {
+thwack.addEventListener('request', (event) => {
 
   if (Math.random() >= 0.02) {
     return;
@@ -404,7 +395,7 @@ api.addEventListener('request', (event) => {
 
   // the code will be executed for approximately 2% of the requests
   const { options } = event;
-  const oldUrl = api.getUri(options);
+  const oldUrl = thwack.getUri(options);
   const url = new URL('', oldUrl);
   url.origin = 'https://api2.example.com'; // point the origin at the new servers
   consy newUrl = url.href; // Get the fully qualified URL
