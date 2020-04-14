@@ -23,7 +23,7 @@ export default class Thwack {
     // bind all Thwack methods to instance
     const methods = Object.getOwnPropertyNames(
       this.constructor.prototype
-    ).filter((m) => m !== 'constructor');
+    ).filter((methodName) => methodName !== 'constructor');
     methods.forEach((methodName) => {
       instance[methodName] = this[methodName].bind(instance);
     });

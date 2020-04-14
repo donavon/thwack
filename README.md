@@ -1,15 +1,38 @@
+<p align="center">
+  <a href="https://reach.tech/router/">
+    <img alt="Reach Router" src="https://user-images.githubusercontent.com/887639/79183562-cab10800-7ddf-11ea-92a8-e82fae0b6c82.png" width="600">
+  </a>
+</p>
+
+<p align="center">
+The tiny modern data fetching solution for browsers.
+</p>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/thwack"><img src="https://img.shields.io/npm/v/thwack.svg?style=flat-square"></a>
+  <a href="https://travis-ci.com/donavon/thwack"><img src="https://img.shields.io/travis/donavon/thwack/master.svg?style=flat-square"></a>
+</p>
+
 # 💥 What the heck is Twack!? 💥
 
 ## TL;DR:
 
 - It's a modern HTTP data fetching
-- Small — ~1k gzipped
+- Small — ~1.3k gzipped
 - Smarter — (say something here)
 - Familiar — Uses an Axios-like interface
 
 This README is a work in progress. More later...
 
 > It's in alpha, so read the source to get started or see the tests! You can also ask me a question [on Twitter](https://twitter.com/donavon).
+
+## Why Thwack over axios?
+
+Axios was great when it was released. It gave us a promise based wrapper around `XMLHttpRequest`, which was hard to use. But that was 5 years ago and times have changed.
+
+Thwack is built for modern browsers and because of that it doesn't have the baggage that axios has. Axios weighs in at around ~5k gzipped. Thwack, on the other hand, is a slender ~1.3k.
+
+They support the same API, but there are some differenced — mainly around `options` — but for the most part, they should be able to be used interchangably for many applications.
 
 ## Methods
 
@@ -22,6 +45,12 @@ This README is a work in progress. More later...
 - `thwack.put(url: string, data:any [,options: ThwackOptions]): Promise<ThwackResponse>`
 - `thwack.patch(url: string, data:any [,options: ThwackOptions]): Promise<ThwackResponse>`
 
+- `thwack.create(options: ThwackOptions): ThwackInstance`
+- `thwack.getUri(options: ThwackOptions): string`
+
+- `thwack.addEventListener(type: string, callback: Function<ThwackOptions>): void`
+- `thwack.removeEventListener(type: string, callback: Function<ThwackOptions>): void`
+
 ## Options
 
 The `options` argument has the following properties.
@@ -30,7 +59,7 @@ The `options` argument has the following properties.
 
 This is either a fully qualified or a relative URL.
 
-### `baseUrl`
+### `baseURL`
 
 Defines a base URL that will be used to build a fully qualified url from `url` above. Defaults to the `origin` + `pathname` of the current web page.
 
@@ -38,7 +67,7 @@ For example, if you did this:
 
 ```js
 thwack('foo', {
-  baseUrl: 'http://example.com',
+  baseURL: 'http://example.com',
 });
 ```
 
@@ -88,12 +117,12 @@ some-other-header': 'My Awesome App'
 
 ### `params`
 
-This is an optional object that contains the key/value pairs that will be used to build the fetch URL. Is there are any `:key` segments of the `baseUrl` or the `url`, they will be replaced with the value of the maything key. For example, if you did this:
+This is an optional object that contains the key/value pairs that will be used to build the fetch URL. Is there are any `:key` segments of the `baseURL` or the `url`, they will be replaced with the value of the maything key. For example, if you did this:
 
 ```js
 thwack('orders/:id', {
   params: { id: 123 },
-  baseUrl: 'http://example.com',
+  baseURL: 'http://example.com',
 });
 ```
 
@@ -136,7 +165,7 @@ Thwack uses the following map as the default, which allows `json` and `formdata`
 
 Any value you specify in `responseParserMap` is merged into the default map. That is to say that you can ovwerride the defaults and/or add new values.
 
-Let's say, for example, you would like to download an image into a blob. You could create an instance of Thwack (using `thwack.create()`) and share it throughout your entire application. Here we set the `baseUrl` to our API endpoint and a `responseParserMap` that will download images of any type as blobs, but will still allow `json` downloads (as this is the default for a `content-type: application/json`).
+Let's say, for example, you would like to download an image into a blob. You could create an instance of Thwack (using `thwack.create()`) and share it throughout your entire application. Here we set the `baseURL` to our API endpoint and a `responseParserMap` that will download images of any type as blobs, but will still allow `json` downloads (as this is the default for a `content-type: application/json`).
 
 ```js
 // api.js
@@ -193,3 +222,15 @@ Then, whenever you want to fetch in your app, import the Thwack instance from `a
 ```
 
 Because you setup an `eventListener` in `api.js`, your `callback` function every time that any place in the app
+
+### Load an Image as a Blog
+
+See this example on [CodeSandbox](https://codesandbox.io/s/thwack-demo-load-image-as-blob-x0rnl?file=/src/ImageBlob/useBlobUrl.js)
+
+## Credits
+
+Thwack is **heavily** inspired by the [axios](https://github.com/axios/axios). Thanks [Matt](https://twitter.com/mzabriskie)!
+
+## License
+
+[MIT](LICENSE)
