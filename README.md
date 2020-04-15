@@ -48,7 +48,7 @@ Axios was great when it was released back in the day. It gave us a promise based
 
 Thwack was built from the ground up with modern browsers in mind. Because of this, it doesn't have the baggage that Axios has. Axios weighs in at around ~5k gzipped. Thwack, on the other hand, is a slender ~1.5k.
 
-They support the same API, but there are some differenced — mainly around `options` — but for the most part, they should be able to be used interchangeably for many applications.
+They support the same API, but there are some differences — mainly around `options` — but for the most part, they should be able to be used interchangeably for many applications.
 
 Thwack doesn't try to solve every problem, like Axios does, but instead provides the solution for 98% of what users _really_ need. This is what gives Thwack its feather-light footprint.
 
@@ -207,7 +207,7 @@ Thwack uses the following map as the default, which allows `json` and `formdata`
 };
 ```
 
-Any value you specify in `responseParserMap` is merged into the default map. That is to say that you can ovwerride the defaults and/or add new values.
+Any value you specify in `responseParserMap` is merged into the default map. That is to say that you can override the defaults and/or add new values.
 
 Let's say, for example, you would like to download an image into a blob. You could create an instance of Thwack (using `thwack.create()`) and share it throughout your entire application. Here we set the `baseURL` to our API endpoint and a `responseParserMap` that will download images of any type as blobs, but will still allow `json` downloads (as this is the default for a `content-type: application/json`).
 
@@ -255,7 +255,7 @@ A `number` representing the 3 digit [HTTP status codes](https://en.wikipedia.org
 
 ### `ok`
 
-A `boolean` set to true is the `status` code in the 2xx range (i.e. a success). If the promist resolves successfully, this value will always be `true`. If the request has a status outside of the 2xx range hwack will throw a `ThwackResponseError` and `ok` will be false.
+A `boolean` set to true is the `status` code in the 2xx range (i.e. a success). If the promist resolves successfully, this value will always be `true`. If the request has a status outside of the 2xx range Thwack will throw a `ThwackResponseError` and `ok` will be false.
 
 ### `statusText`
 
