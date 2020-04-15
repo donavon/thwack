@@ -332,7 +332,7 @@ thwack.addEventListener('request', callback);
 
 ### The `response` event
 
-The event is fored _after_ the HTTP headers are received, but _before_ the body is streamed and parsed. Listeners will receive a `ThwackResponseEvent` object with a `thwackResponse` key set to the response.
+The event is formed _after_ the HTTP headers are received, but _before_ the body is streamed and parsed. Listeners will receive a `ThwackResponseEvent` object with a `thwackResponse` key set to the response.
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
