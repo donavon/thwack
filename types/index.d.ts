@@ -7,7 +7,8 @@ export type ThwackEventType = 'request' | 'response';
 export type ResponseType =
   | 'arraybuffer'
   | 'arrayBuffer'
-  | 'document'
+  | 'formdata'
+  | 'formData'
   | 'json'
   | 'text'
   | 'stream'

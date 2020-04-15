@@ -144,7 +144,7 @@ const api = thwack.create({
 Then later, when you use the instance, you make a call like this:
 
 ```js
-const { data } = await thwack.get('foo', {
+const { data } = await api.get('foo', {
   headers: {
     'some-other-header': 'My Awesome App',
   },
