@@ -182,7 +182,7 @@ If you don't specify a `:name`, or there are more `param`s than there are `:name
 
 By default, Thwack will automatically determine how to decode the response data based on the value of the response header `content-type`. However, if the server responds with an incorrect value, you can override the parser by setting `responseType`. Valid values are `arraybuffer`, `document` (i.e. `formdata`), `json`, `text`, `stream`, and `blob`. Defaults to automatic.
 
-What is returned by Thwack is determined by the following table. The "fetch method" column is what is resolved in `data`. If you do not specify a `responseType`, Thwack with automatically determine the fetch method based on `content-type` and the `responseParserMap` table (see below).
+What is returned by Thwack is determined by the following table. The "fetch method" column is what is resolved in `data`. If you do not specify a `responseType`, Thwack will automatically determine the fetch method based on `content-type` and the `responseParserMap` table (see below).
 
 |     Content-Type      | `responseType` |                      `fetch` method                      |
 | :-------------------: | :------------: | :------------------------------------------------------: |
@@ -195,7 +195,7 @@ What is returned by Thwack is determined by the following table. The "fetch meth
 
 ### `responseParserMap`
 
-Another useful way to determine which response parser to use is with `responseParserMap`. It allows you to setup a mapping between content types and parser types.
+Another useful way to determine which response parser to use is with `responseParserMap`. It allows you to set up a mapping between content types and parser types.
 
 Thwack uses the following map as the default, which allows `json` and `formdata` decoding. If there are no matches, the response parser defaults to `text`. You may specify a default by setting the special `.default` key.
 
@@ -255,7 +255,7 @@ A `number` representing the 3 digit [HTTP status codes](https://en.wikipedia.org
 
 ### `ok`
 
-A `boolean` set to true is the `status` code in the 2xx range (i.e. a success). If the promist resolves successfully, this value will always be `true`. If the request has a status outside of the 2xx range Thwack will throw a `ThwackResponseError` and `ok` will be false.
+A `boolean` set to true is the `status` code in the 2xx range (i.e. a success). If the promise resolves successfully, this value will always be `true`. If the request has a status outside of the 2xx range Thwack will throw a `ThwackResponseError` and `ok` will be false.
 
 ### `statusText`
 
@@ -286,7 +286,7 @@ ThwackResponseError
 
 If the response from a Thwack request results in a non-2xx `status` code (e.g. 404 Not Found) then a `ThwackResponseError` is thrown.
 
-> Note: It is possible that other types of errors could be thrown (e.g. a bad event listener callback), so it is a best practice to interogate the caught error to see if it is of type `ThwackResponseError`.
+> Note: It is possible that other types of errors could be thrown (e.g. a bad event listener callback), so it is a best practice to interrogate the caught error to see if it is of type `ThwackResponseError`.
 
 ```js
 try {
@@ -308,7 +308,7 @@ A `ThwackResponseError` has all of the properties of a normal JavaScript `Error`
 Instances
 </h2>
 
-Instances created in Thwack are based on the parent instance. A parents's default options pass down through the instances. This can come in handy for setting up options in the parent that can effect the children, such as `baseURL`,
+Instances created in Thwack are based on the parent instance. A parents's default options pass down through the instances. This can come in handy for setting up options in the parent that can affect the children, such as `baseURL`,
 
 Inversely, parents can use `addEventListener` to monitor their children (see the [How to log every API call](#how-to-log-every-api-call) below for an example of this).
 
