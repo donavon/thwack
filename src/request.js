@@ -1,5 +1,6 @@
 import { APPLICATION_JSON, CONTENT_TYPE } from './defaults';
 
+import ThwackResponse from './ThwackResponse';
 import ThwackRequestEvent from './ThwackEvents/ThwackRequestEvent';
 import ThwackResponseEvent from './ThwackEvents/ThwackResponseEvent';
 import buildUrl from './utils/buildUrl';
@@ -58,17 +59,9 @@ const request = async function (requestOptions) {
   };
 
   const response = await fetch(fetchUrl, fetchOptions);
-
-  const { status, ok, statusText, headers: responseHeaders } = response;
-
-  const responseEvent = new ThwackResponseEvent({
-    status,
-    statusText,
-    ok,
-    headers: Object.fromEntries(responseHeaders.entries()),
-    options,
-    response,
-  });
+  const responseEvent = new ThwackResponseEvent(
+    new ThwackResponse(response, options)
+  );
 
   if (!this.dispatchEvent(responseEvent)) {
     return responseEvent.promise;

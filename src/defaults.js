@@ -1,5 +1,5 @@
-export const APPLICATION_JSON = 'application/json'.trim();
-export const CONTENT_TYPE = 'content-type'.trim();
+export const APPLICATION_JSON = 'application/json';
+export const CONTENT_TYPE = 'content-type';
 
 const {
   fetch,

@@ -1,4 +1,5 @@
 import thwack from '../src';
+import ThwackResponse from '../src/ThwackResponse';
 import {
   createMockFetch,
   fooBarData,
@@ -22,6 +23,7 @@ describe('thwack', () => {
       foo: 'bar',
     };
     const data = await thwack(options);
+    expect(data instanceof ThwackResponse).toBe(true);
     expect(data).toEqual({
       data: fooBarData,
       options: mergeDefaults(options),

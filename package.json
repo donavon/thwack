@@ -4,8 +4,8 @@
     "access": "public",
     "tag": "next"
   },
-  "version": "0.1.0-alpha.10",
-  "description": "A tiny, modern data fetching solution.",
+  "version": "0.1.0-beta.1",
+  "description": "A tiny modern data fetching solution.",
   "main": "dist/thwack.js",
   "umd:main": "dist/thwack.umd.js",
   "module": "dist/thwack.m.js",

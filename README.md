@@ -1,9 +1,9 @@
 <p align="center">
-    <img alt="Thwack logo" src="https://repository-images.githubusercontent.com/254701245/b63c3200-7e16-11ea-872e-0f25e8045568" width="600">
+    <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79361317-23cd8880-7f13-11ea-9a80-94f1d7e2eb93.png" width="640">
 </p>
 
 <h1 align="center">
-Thwack. A tiny, modern data fetching solution
+Thwack. A tiny modern data fetching solution
 </h1>
 
 <p align="center">
@@ -13,15 +13,16 @@ Thwack. A tiny, modern data fetching solution
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
-What the heck is Twack!? TL;DR:
+TL;DR
 </h2>
+Thwack is:
 
 - 💻 Modern - Thwack is an HTTP data fetching solution build for modern browsers
 - 🔎 Small — Thwack is only ~1.5k gzipped
 - 👩‍🏫 Smarter — Built with modern JavaScript
 - 😘 Familiar — Thwack uses an Axios-like interface
 
-> This README is a work in progress. Thwack is in alpha, so read the source to get started or see the tests! You can also ask me a question [on Twitter](https://twitter.com/donavon).
+> This README is a work in progress. You can also ask me a question [on Twitter](https://twitter.com/donavon).
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
@@ -58,35 +59,36 @@ Methods
 
 ### Data fetching
 
-- `thwack(url: string [,options: ThwackOptions]): Promise<ThwackResponse>`
+- `thwack(url: string [,options: ThwackOptions]): Promise<ThwackResponse>;`
 
 - `thwack.request(options: ThwackOptions): Promise<ThwackResponse>`
-- `thwack.get(url: string [,options: ThwackOptions]): Promise<ThwackResponse>`
+- `thwack.get(url: string [,options: ThwackOptions]): Promise<ThwackResponse>;`
 
-- `thwack.delete(url: string [,options: ThwackOptions]): Promise<ThwackResponse>`
+- `thwack.delete(url: string [,options: ThwackOptions]): Promise<ThwackResponse>;`
 
-- `thwack.head(url: string [,options: ThwackOptions]): Promise<ThwackResponse>`
+- `thwack.head(url: string [,options: ThwackOptions]): Promise<ThwackResponse>;`
 
-- `thwack.post(url: string, data:any [,options: ThwackOptions]): Promise<ThwackResponse>`
+- `thwack.post(url: string, data:any [,options: ThwackOptions]): Promise<ThwackResponse>;`
 
-- `thwack.put(url: string, data:any [,options: ThwackOptions]): Promise<ThwackResponse>`
+- `thwack.put(url: string, data:any [,options: ThwackOptions]): Promise<ThwackResponse>;`
 
-- `thwack.patch(url: string, data:any [,options: ThwackOptions]): Promise<ThwackResponse>`
+- `thwack.patch(url: string, data:any [,options: ThwackOptions]): Promise<ThwackResponse>;`
 
 ### Utility
 
-- `thwack.create(options: ThwackOptions): ThwackInstance`
-  Creates a new child instance of the current Thwack instance with the given `options`.
+- `thwack.create(options: ThwackOptions): ThwackInstance;`
 
-- `thwack.getUri(options: ThwackOptions): string`
+  The `create` method creates (da!) a new child instance of the current Thwack instance with the given `options`.
+
+- `thwack.getUri(options: ThwackOptions): string;`
 
 ### Event listeners
 
 For more information on Thwack's event system, see [Thwack events](#thwack-events) below.
 
-- `thwack.addEventListener(type: string, callback: Function<ThwackEvent>): void`
+- `thwack.addEventListener(type: string,callback: (event:ThwackEvent) => void ): void;`
 
-- `thwack.removeEventListener(type: string, callback: Function<ThwackEvent>): void`
+- `thwack.removeEventListener(type: string,callback: (event:ThwackEvent) => void ): void;`
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
@@ -261,13 +263,17 @@ A `string` representing the text of the `status` code. You should use the `statu
 
 ### `headers`
 
-A `key/value object with the returned HTTP headers. Any duplicate headers will be concatenated into a single header separated by semicolons.
+A key/value object with the returned HTTP headers. Any duplicate headers will be concatenated into a single header separated by semicolons.
 
 ### `data`
 
 This will hold the returned body of the HTTP response after it has been streamed and converted. The only exception is if you used the `responseType` of `stream`, in which case `data` is set directly to the `body` element.
 
 If a `ThwackResponseError` was thrown, `data` will be the plain text representation of the response body.
+
+### `options`
+
+The complete `options` object that processed the request. This `options` will be fully merged with parent instances (if any) as well as with defaults.
 
 ### `response`
 
@@ -326,7 +332,7 @@ thwack.addEventListener('request', callback);
 
 ### The `response` event
 
-> [not implimented yet]
+The event is fored _after_ the HTTP headers are received, but _before_ the body is streamed and parsed. Listeners will receive a `ThwackResponseEvent` object with a `thwackResponse` key set to the response.
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">

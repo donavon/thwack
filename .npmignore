@@ -8,3 +8,4 @@ coverage
 .prettierrc
 .travis.yml
 .all-contributorsrc
+jestUtils.js
