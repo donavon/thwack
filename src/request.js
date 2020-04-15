@@ -1,6 +1,7 @@
 import { APPLICATION_JSON, CONTENT_TYPE } from './defaults';
 
 import ThwackRequestEvent from './ThwackEvents/ThwackRequestEvent';
+import ThwackResponseEvent from './ThwackEvents/ThwackResponseEvent';
 import buildUrl from './utils/buildUrl';
 import combineOptions from './utils/combineOptions';
 import computeParser from './utils/computeParser';
@@ -57,18 +58,25 @@ const request = async function (requestOptions) {
   };
 
   const response = await fetch(fetchUrl, fetchOptions);
+
   const { status, ok, statusText, headers: responseHeaders } = response;
 
-  const thwackResponse = {
+  const responseEvent = new ThwackResponseEvent({
     status,
     statusText,
     ok,
     headers: Object.fromEntries(responseHeaders.entries()),
+    options,
     response,
-  };
+  });
 
-  if (response.ok) {
-    const contentTypeHeader = response.headers.get(CONTENT_TYPE);
+  if (!this.dispatchEvent(responseEvent)) {
+    return responseEvent.promise;
+  }
+  const { thwackResponse } = responseEvent;
+
+  if (thwackResponse.ok) {
+    const contentTypeHeader = thwackResponse.headers[CONTENT_TYPE];
     const responseParserType =
       responseType || computeParser(contentTypeHeader, responseParserMap);
     const compatResponseParserType = compatParser(responseParserType);

@@ -1,3 +1,4 @@
+// take a pair from Array.entries (key/value) and sort the key alphabetically
 const sortByEntry = ([a], [b]) => {
   if (a < b) {
     return -1;

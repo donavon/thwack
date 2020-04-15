@@ -345,6 +345,42 @@ thwack.addEventListener('request', (event) => {
 });
 ```
 
+If you are using React, here is a Hook that you can "use" in your App that will accomplish the same thing.
+
+```js
+import { useEffect } from 'react';
+import thwack from 'thwack';
+
+const logUrl = (event) => {
+  const { options } = event;
+  const fullyQualifiedUrl = thwack.getUri(options);
+  console.log(`hitting ${fullyQualifiedUrl}`);
+};
+
+const useThwackLogger = () => {
+  useEffect(() => {
+    thwack.addEventListener('request', logUrl);
+    return () => thwack.removeEventListener('request', logUrl);
+  }, []);
+};
+
+export default useThwackLogger;
+```
+
+Here is a code snippet on how to use it.
+
+```js
+const App = () ={
+  useThwackLogger()
+
+  return (
+    <div>
+      ...
+    </div>
+  )
+}
+```
+
 ### Return mock data
 
 Let's say you have an app that has made a request for some user data. If the app is hitting a specific URL (say `users`) and querying for a particular user ID (say `123`), you would like to prevent the request from hitting the server and instead mock the results.
@@ -376,7 +412,7 @@ thwack.addEventListener('request', (event) => {
 });
 ```
 
-### Load an Image as a Blog
+### Load an Image as a Blob
 
 See this example on [CodeSandbox](https://codesandbox.io/s/thwack-demo-load-image-as-blob-x0rnl?file=/src/ImageBlob/useBlobUrl.js)
 

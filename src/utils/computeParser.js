@@ -1,6 +1,6 @@
 import { defaultParserMap } from '../defaults';
 
-const computeParser = (contentTypeHeader, parserMap) => {
+const computeParser = (contentTypeHeader = '', parserMap) => {
   // grab just the actual type
   // ex: 'application/json; charset=utf-8' => 'application/json'
   const [contentType] = contentTypeHeader.split(';');

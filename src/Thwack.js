@@ -5,6 +5,8 @@ import buildUrl from './utils/buildUrl';
 import resolveOptionsFromArgs from './utils/resolveOptionsFromArgs';
 import ThwackStopPropagationError from './ThwackErrors/ThwackStopPropagationError';
 
+// TODO extend EventTarget eventually
+// this will simplify the add/remove event listener stuff
 export default class Thwack {
   constructor(defaultOptions, parent) {
     // accepts (url, options) or just (options), but calls

@@ -1,70 +1,12 @@
 import thwack from '../src';
-import { defaultOptions } from '../src/defaults';
-
-const { headers: defaultHeaders } = defaultOptions;
-const defaultBaseUrl = 'http://localhost/';
-const fooBarData = { foo: 'bar' };
-const defaultFetchOptions = {
-  ...fooBarData,
-  headers: defaultHeaders,
-};
-
-if (!Object.fromEntries) {
-  Object.fromEntries = function ObjectFromEntries(iter) {
-    const obj = {};
-
-    // eslint-disable-next-line no-restricted-syntax
-    for (const pair of iter) {
-      if (Object(pair) !== pair) {
-        throw new TypeError('iterable for fromEntries should yield objects');
-      }
-
-      // Consistency with Map: contract is that entry has "0" and "1" keys, not
-      // that it is an array or iterable.
-
-      // eslint-disable-next-line quote-props
-      const { '0': key, '1': val } = pair;
-
-      Object.defineProperty(obj, key, {
-        configurable: true,
-        enumerable: true,
-        writable: true,
-        value: val,
-      });
-    }
-
-    return obj;
-  };
-}
-
-const createMockFetch = (options = {}) => {
-  const {
-    status = 200,
-    ok = true,
-    statusText = 'ok',
-    contentType = 'application/json',
-    jsonResult = fooBarData,
-    textResult = 'text',
-    body = '(stream)',
-  } = options;
-
-  const response = {
-    status,
-    statusText,
-    ok,
-    headers: {
-      get: () => contentType,
-      entries: () => [['content-type', contentType]],
-    },
-    json: async () => jsonResult,
-    text: async () => textResult,
-    body,
-  };
-
-  const fetch = jest.fn(() => Promise.resolve(response));
-  fetch.response = response;
-  return fetch;
-};
+import {
+  createMockFetch,
+  fooBarData,
+  defaultBaseUrl,
+  defaultFetchOptions,
+  defaultHeaders,
+  mergeDefaults,
+} from '../jestUtils';
 
 describe('thwack', () => {
   it('returns a promise', () => {
@@ -74,12 +16,15 @@ describe('thwack', () => {
   });
   it('thwack(options) resolves with a ThwackResponse object', async () => {
     const fetch = createMockFetch();
-    const data = await thwack('foo', {
+    const options = {
+      url: 'foo',
       fetch,
       foo: 'bar',
-    });
+    };
+    const data = await thwack(options);
     expect(data).toEqual({
       data: fooBarData,
+      options: mergeDefaults(options),
       headers: {
         'content-type': 'application/json',
       },
@@ -91,14 +36,16 @@ describe('thwack', () => {
   });
   it('thwack(url, options) resolves with a ThwackResponse object', async () => {
     const fetch = createMockFetch();
-    const data = await thwack({
+    const options = {
       url: 'foo',
       fetch,
       foo: 'bar',
-    });
+    };
+    const data = await thwack(options);
     expect(fetch).toBeCalledWith(`${defaultBaseUrl}foo`, defaultFetchOptions);
     expect(data).toEqual({
       data: fooBarData,
+      options: mergeDefaults(options),
       headers: {
         'content-type': 'application/json',
       },
@@ -204,6 +151,18 @@ describe('thwack', () => {
       headers: { 'content-type': 'text/plain', ...defaultHeaders },
       body: 'this is plain text',
       method: 'FOO',
+    });
+  });
+
+  describe('when response does not specify a content-type', () => {
+    it('defaults to text parsing', async () => {
+      const fetch = createMockFetch();
+      // patch mock fetch to not return any headers
+      fetch.response.headers = {
+        entries: () => [],
+      };
+      const { data } = await thwack('foo', { fetch });
+      expect(data).toEqual('text');
     });
   });
 
@@ -317,6 +276,13 @@ describe('thwack convenience functions', () => {
       });
       expect(data).toEqual({
         data: fooBarData,
+        options: mergeDefaults({
+          url: 'foo',
+          data: 'data',
+          fetch,
+          method,
+          headers: { 'content-type': 'application/json' },
+        }),
         headers: {
           'content-type': 'application/json',
         },
@@ -339,6 +305,11 @@ describe('thwack convenience functions', () => {
       });
       expect(data).toEqual({
         data: fooBarData,
+        options: mergeDefaults({
+          url: 'foo',
+          fetch,
+          method,
+        }),
         headers: {
           'content-type': 'application/json',
         },
@@ -352,14 +323,16 @@ describe('thwack convenience functions', () => {
 
   it('thwack.request(options) resolves with a ThwackResponse object', async () => {
     const fetch = createMockFetch();
-    const data = await thwack.request({
+    const options = {
       url: 'foo',
       fetch,
       foo: 'bar',
-    });
+    };
+    const data = await thwack.request(options);
     expect(fetch).toBeCalledWith(`${defaultBaseUrl}foo`, defaultFetchOptions);
     expect(data).toEqual({
       data: fooBarData,
+      options: mergeDefaults(options),
       headers: {
         'content-type': 'application/json',
       },
@@ -377,13 +350,16 @@ describe('thwack.create(options)', () => {
 
   it('will use the options as defaults in the new instance', async () => {
     const fetch = createMockFetch();
-    const data = await instance1('foo', {
+    const options = {
+      url: 'foo',
       fetch,
       foo: 'bar',
-    });
+    };
+    const data = await instance1(options);
     expect(fetch).toBeCalledWith('http://one.com/foo', defaultFetchOptions);
     expect(data).toEqual({
       data: fooBarData,
+      options: { ...mergeDefaults(options), baseURL: 'http://one.com' },
       headers: {
         'content-type': 'application/json',
       },
@@ -396,13 +372,16 @@ describe('thwack.create(options)', () => {
 
   it('will be unique per instance', async () => {
     const fetch = createMockFetch();
-    const data = await instance2('foo', {
+    const options = {
+      url: 'foo',
       fetch,
       foo: 'bar',
-    });
+    };
+    const data = await instance2(options);
     expect(fetch).toBeCalledWith('http://two.com/foo', defaultFetchOptions);
     expect(data).toEqual({
       data: fooBarData,
+      options: { ...mergeDefaults(options), baseURL: 'http://two.com' },
       headers: {
         'content-type': 'application/json',
       },
@@ -415,13 +394,16 @@ describe('thwack.create(options)', () => {
 
   it('will not effect the base thwack instance', async () => {
     const fetch = createMockFetch();
-    const data = await thwack('foo', {
+    const options = {
+      url: 'foo',
       fetch,
       foo: 'bar',
-    });
+    };
+    const data = await thwack(options);
     expect(fetch).toBeCalledWith(`${defaultBaseUrl}foo`, defaultFetchOptions);
     expect(data).toEqual({
       data: fooBarData,
+      options: mergeDefaults(options),
       headers: {
         'content-type': 'application/json',
       },
@@ -470,157 +452,5 @@ describe('thwack.getUri', () => {
 describe('thwack.ThwackResponseError', () => {
   it('is exported as an instance of Error', () => {
     expect(new thwack.ThwackResponseError({}) instanceof Error).toBe(true);
-  });
-});
-
-describe('thwack EventTarget', () => {
-  describe('calling addEventListener', () => {
-    it('has its callback called with options before calling fetch', async () => {
-      const fetch = createMockFetch();
-      const callback = jest.fn();
-      thwack.addEventListener('request', callback);
-      const data = await thwack('foo', {
-        fetch,
-        foo: 'bar',
-      });
-      thwack.removeEventListener('request', callback);
-      expect(callback).toHaveBeenCalledTimes(1);
-      // expect(callback).toBeCalledWith({});
-      expect(fetch).toBeCalledWith(`${defaultBaseUrl}foo`, defaultFetchOptions);
-      expect(data).toEqual({
-        data: fooBarData,
-        headers: {
-          'content-type': 'application/json',
-        },
-        status: 200,
-        ok: true,
-        statusText: 'ok',
-        response: fetch.response,
-      });
-    });
-    it('can be called multiple times and see the effects from the other callbacks', async () => {
-      const fetch = createMockFetch();
-      const callback1 = jest.fn((e) => {
-        e.options = { ...e.options, url: `${e.options.url}bar` };
-      });
-      const callback2 = jest.fn((e) => {
-        e.options = { ...e.options, url: `${e.options.url}bar` };
-      });
-      thwack.addEventListener('request', callback1);
-      thwack.addEventListener('request', callback2);
-      await thwack('foo', {
-        fetch,
-        foo: 'bar',
-      });
-      thwack.removeEventListener('request', callback2);
-      thwack.removeEventListener('request', callback1);
-      expect(callback1).toHaveBeenCalledTimes(1);
-      expect(callback2).toHaveBeenCalledTimes(1);
-      expect(fetch).toBeCalledWith(
-        `${defaultBaseUrl}foobarbar`,
-        defaultFetchOptions
-      );
-    });
-    it('a callback can call stopPropagation() to prevent additional callbacks from executing', async () => {
-      const fetch = createMockFetch();
-      const callback1 = jest.fn((e) => {
-        e.options = { ...e.options, url: `${e.options.url}bar` };
-        e.stopPropagation();
-      });
-      const callback2 = jest.fn((e) => {
-        e.options = { ...e.options, url: `${e.options.url}bar` };
-      });
-      thwack.addEventListener('request', callback1);
-      thwack.addEventListener('request', callback2);
-      await thwack('foo', {
-        fetch,
-        foo: 'bar',
-      });
-      thwack.removeEventListener('request', callback2);
-      thwack.removeEventListener('request', callback1);
-      expect(callback1).toHaveBeenCalledTimes(1);
-      expect(callback2).toHaveBeenCalledTimes(0);
-      expect(fetch).toBeCalledWith(
-        `${defaultBaseUrl}foobar`,
-        defaultFetchOptions
-      );
-    });
-    it('exceptions in callbacks make it out to the process what called request', async () => {
-      const fetch = createMockFetch();
-      const callback1 = jest.fn(() => {
-        throw new Error('boo!');
-      });
-      const callback2 = jest.fn((e) => {
-        e.options = { ...e.options, url: `${e.options.url}bar` };
-      });
-      thwack.addEventListener('request', callback1);
-      thwack.addEventListener('request', callback2);
-      try {
-        await thwack('foo', {
-          fetch,
-          foo: 'bar',
-        });
-      } catch (ex) {
-        expect(ex.toString()).toBe('Error: boo!');
-      }
-      thwack.removeEventListener('request', callback2);
-      thwack.removeEventListener('request', callback1);
-      expect(callback1).toHaveBeenCalledTimes(1);
-      expect(callback2).toHaveBeenCalledTimes(0);
-      expect(fetch).toHaveBeenCalledTimes(0);
-    });
-    it('parent events happen before child events and a stopPropagation on the parent stops child events', async () => {
-      const fetch = createMockFetch();
-      const instance = thwack.create();
-      const callback1 = jest.fn((e) => {
-        e.options = { ...e.options, url: `${e.options.url}bar` };
-        e.stopPropagation();
-      });
-      const callback2 = jest.fn((e) => {
-        e.options = { ...e.options, url: `${e.options.url}bar` };
-      });
-      thwack.addEventListener('request', callback1);
-      instance.addEventListener('request', callback2);
-      await instance('foo', {
-        fetch,
-        foo: 'bar',
-      });
-      instance.removeEventListener('request', callback2);
-      thwack.removeEventListener('request', callback1);
-      expect(callback1).toHaveBeenCalledTimes(1);
-      expect(callback2).toHaveBeenCalledTimes(0);
-      expect(fetch).toBeCalledWith(
-        `${defaultBaseUrl}foobar`,
-        defaultFetchOptions
-      );
-    });
-    it('a callback can call preventDefault() to prevent the fetch from happening', async () => {
-      const fetch = createMockFetch();
-      const callback = jest.fn((e) => {
-        e.promise = Promise.resolve('preventDefault');
-        e.preventDefault();
-      });
-      thwack.addEventListener('request', callback);
-      const resp = await thwack('foo', {
-        fetch,
-        foo: 'bar',
-      });
-      thwack.removeEventListener('request', callback);
-      expect(callback).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenCalledTimes(0);
-      expect(resp).toEqual('preventDefault');
-    });
-  });
-  describe('calling removeEventListener', () => {
-    it('is properly removed', async () => {
-      const fetch = createMockFetch();
-      const callback = jest.fn();
-      thwack.addEventListener('request', callback);
-      await thwack('foo', { fetch });
-      expect(callback).toHaveBeenCalledTimes(1);
-      thwack.removeEventListener('request', callback);
-      await thwack('foo', { fetch });
-      expect(callback).toHaveBeenCalledTimes(1);
-    });
   });
 });
