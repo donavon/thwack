@@ -44,7 +44,7 @@ $ yarn add thwack
 Why Thwack over Axios?
 </h2>
 
-Axios was great when it was released back in the day. It gave us a promise based wrapper around `XMLHttpRequest`, which was difficult to use. But that was along time ago and times have changed — browsers have gotten smarter. Maybe it's time for your data fetching solution to keep up?
+Axios was great when it was released back in the day. It gave us a promise based wrapper around `XMLHttpRequest`, which was difficult to use. But that was a long time ago and times have changed — browsers have gotten smarter. Maybe it's time for your data fetching solution to keep up?
 
 Thwack was built from the ground up with modern browsers in mind. Because of this, it doesn't have the baggage that Axios has. Axios weighs in at around ~5k gzipped. Thwack, on the other hand, is a slender ~1.5k.
 
