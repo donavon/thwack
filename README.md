@@ -18,7 +18,7 @@ TL;DR
 
 Thwack is:
 
-- 💻 Modern - Thwack is an HTTP data fetching solution build for modern browsers
+- 💻 Modern - Thwack is an HTTP data fetching solution built for modern browsers
 - 🔎 Small — Thwack is only ~1.5k gzipped
 - 👩‍🏫 Smarter — Built with modern JavaScript
 - 😘 Familiar — Thwack uses an Axios-like interface
