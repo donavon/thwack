@@ -476,6 +476,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="http://jeremytice.com"><img src="https://avatars0.githubusercontent.com/u/1740479?v=4" width="100px;" alt=""/><br /><sub><b>Jeremy Tice</b></sub></a><br /><a href="https://github.com/donavon/thwack/commits?author=jetpacmonkey" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/yurm04"><img src="https://avatars0.githubusercontent.com/u/4642404?v=4" width="100px;" alt=""/><br /><sub><b>Yuraima Estevez</b></sub></a><br /><a href="https://github.com/donavon/thwack/commits?author=yurm04" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/bargar"><img src="https://avatars2.githubusercontent.com/u/1666818?v=4" width="100px;" alt=""/><br /><sub><b>Jeremy Bargar</b></sub></a><br /><a href="https://github.com/donavon/thwack/commits?author=bargar" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://github.com/brookescarlett"><img src="https://avatars1.githubusercontent.com/u/26016393?v=4" width="100px;" alt=""/><br /><sub><b>Brooke Scarlett Yalof</b></sub></a><br /><a href="https://github.com/donavon/thwack/commits?author=brookescarlett" title="Documentation">📖</a></td>
   </tr>
 </table>
 
