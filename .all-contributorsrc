@@ -38,6 +38,15 @@
       "contributions": [
         "doc"
       ]
+    },
+    {
+      "login": "bargar",
+      "name": "Jeremy Bargar",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/1666818?v=4",
+      "profile": "https://github.com/bargar",
+      "contributions": [
+        "doc"
+      ]
     }
   ],
   "contributorsPerLine": 7,
