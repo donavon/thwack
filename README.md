@@ -1,8 +1,5 @@
 <p align="center">
-<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
-<!-- ALL-CONTRIBUTORS-BADGE:END -->
-    <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79361317-23cd8880-7f13-11ea-9a80-94f1d7e2eb93.png" width="640">
+  <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79361317-23cd8880-7f13-11ea-9a80-94f1d7e2eb93.png" width="640">
 </p>
 
 <h1 align="center">
@@ -12,12 +9,14 @@ Thwack. A tiny modern data fetching solution
 <p align="center">
   <a href="https://www.npmjs.com/package/thwack"><img src="https://img.shields.io/npm/v/thwack.svg?style=flat-square"></a>
   <a href="https://travis-ci.com/donavon/thwack"><img src="https://img.shields.io/travis/donavon/thwack/master.svg?style=flat-square"></a>
+  <img src="https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square">
 </p>
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
 TL;DR
 </h2>
+
 Thwack is:
 
 - 💻 Modern - Thwack is an HTTP data fetching solution build for modern browsers
@@ -479,6 +478,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
