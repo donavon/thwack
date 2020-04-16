@@ -340,6 +340,27 @@ The event is fired _after_ the HTTP headers are received, but _before_ the body 
 How to
 </h2>
 
+### Cancelling a request
+
+Use an `AbortController` to cancel requests by passing its `signal` in the `thwack` options:
+
+```js
+const controller = new AbortController();
+const { signal } = controller;
+
+thwack(url, { signal })
+  .then(handleResponse)
+  .catch(handleError);
+
+controller.abort();
+```
+
+In case you want to perform some action on request cancellation, you can listen to the `abort` event on `signal` too:
+
+```js
+signal.addEventListener('abort', handleAbort);
+```
+
 ### Log every request
 
 Add an `addEventListener('request', callback)` and log each request to the console.
