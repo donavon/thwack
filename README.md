@@ -6,11 +6,10 @@
 Thwack. A tiny modern data fetching solution
 </h1>
 
-<p align="center">
-  <a href="https://www.npmjs.com/package/thwack"><img src="https://img.shields.io/npm/v/thwack.svg?style=flat-square"></a>
-  <a href="https://travis-ci.com/donavon/thwack"><img src="https://img.shields.io/travis/donavon/thwack/master.svg?style=flat-square"></a>
-  <img src="https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square">
-</p>
+[![npm version](https://badge.fury.io/js/thwack.svg)](https://badge.fury.io/js/thwack) [![Build Status](https://travis-ci.com/donavon/thwack.svg?branch=master)](https://travis-ci.com/donavon/thwack) [![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors)
+[![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Check%20out%20Thwack%21%20A%20tiny%20modern%20data%20fetching%20solution.&url=https://github.com/donavon/thwack&via=donavon&hashtags=javascript)
+
+❤️ it? ⭐️ it on [GitHub](https://github.com/donavon/thwack/stargazers)
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
@@ -482,6 +481,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
