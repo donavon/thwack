@@ -7,16 +7,18 @@ const deepSpreadOptions = (createOptions = {}, options = {}) => {
     ...options,
   });
 
-  const combined = {};
+  return allKeys.reduce((combined, key) => {
+    // TODO use nullish coalescing when supported by microbundle, like this:
+    // const value = options[key] ?? createOptions[key];
+    const value = options[key] != null ? options[key] : createOptions[key];
 
-  allKeys.forEach((key) => {
-    const value = options[key] || createOptions[key];
-    combined[key] = isObject(value)
-      ? deepSpreadOptions(createOptions[key], options[key])
-      : value;
-  });
-
-  return combined;
+    return {
+      ...combined,
+      [key]: isObject(value)
+        ? deepSpreadOptions(createOptions[key], options[key])
+        : value,
+    };
+  }, {});
 };
 
 export default deepSpreadOptions;
