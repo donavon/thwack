@@ -309,7 +309,7 @@ A `ThwackResponseError` has all of the properties of a normal JavaScript `Error`
 Instances
 </h2>
 
-Instances created in Thwack are based on the parent instance. A parents's default options pass down through the instances. This can come in handy for setting up options in the parent that can affect the children, such as `baseURL`,
+Instances created in Thwack are based on the parent instance. A parent's default options pass down through the instances. This can come in handy for setting up options in the parent that can affect the children, such as `baseURL`,
 
 Inversely, parents can use `addEventListener` to monitor their children (see the [How to log every API call](#how-to-log-every-api-call) below for an example of this).
 
@@ -464,7 +464,7 @@ thwack.addEventListener('request', (event) => {
   const oldUrl = thwack.getUri(options);
   const url = new URL('', oldUrl);
   url.origin = 'https://api2.example.com'; // point the origin at the new servers
-  consy newUrl = url.href; // Get the fully qualified URL
+  const newUrl = url.href; // Get the fully qualified URL
   event.options = { ...event.options, url: newUrl }; // replace `options`]
 });
 ```
