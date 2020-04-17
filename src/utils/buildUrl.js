@@ -8,7 +8,7 @@ import sortByEntry from './sortByEntry';
 // Would return:
 //   http://example.com/foo/123?color=red
 //
-const buildUrl = (url, baseUrl, query) => {
+const buildUrl = (url = '', baseUrl, query) => {
   const mutatedQuery = { ...query };
   const newUrl = new URL(url, baseUrl);
 

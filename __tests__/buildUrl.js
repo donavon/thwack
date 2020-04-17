@@ -44,6 +44,10 @@ describe('sortByEnbuildUrltry', () => {
       expect(result).toBe(expectedResult);
     });
   });
+  it('defaults URL to an empty string', () => {
+    const result = buildUrl(undefined, 'http://example.com');
+    expect(result).toBe('http://example.com/');
+  });
   it('allows params to be missing', () => {
     const result = buildUrl('foo', 'http://example.com');
     expect(result).toBe('http://example.com/foo');
