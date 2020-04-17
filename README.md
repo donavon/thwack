@@ -6,13 +6,14 @@
 Thwack. A tiny modern data fetching solution
 </h1>
 
-[![npm version](https://badge.fury.io/js/thwack.svg)](https://badge.fury.io/js/thwack) [![Build Status](https://travis-ci.com/donavon/thwack.svg?branch=master)](https://travis-ci.com/donavon/thwack) [![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors)
+[![npm version](https://badge.fury.io/js/thwack.svg)](https://badge.fury.io/js/thwack)
+[![Build Status](https://travis-ci.com/donavon/thwack.svg?branch=master)](https://travis-ci.com/donavon/thwack)
+[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
 [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Check%20out%20Thwack%21%20A%20tiny%20modern%20data%20fetching%20solution.&url=https://github.com/donavon/thwack&via=donavon&hashtags=javascript)
-
-❤️ it? ⭐️ it on [GitHub](https://github.com/donavon/thwack/stargazers)
+[![Github stars](https://img.shields.io/badge/%E2%AD%90%EF%B8%8F-it%20on%20GitHub-blue)](https://github.com/donavon/thwack/stargazers)
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
 TL;DR
 </h2>
 
@@ -26,7 +27,7 @@ Thwack is:
 > This README is a work in progress. You can also ask me a question [on Twitter](https://twitter.com/donavon).
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
 Installation
 </h2>
 
@@ -41,7 +42,7 @@ $ yarn add thwack
 ```
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
 Why Thwack over Axios?
 </h2>
 
@@ -54,7 +55,7 @@ They support the same API, but there are some differences — mainly around `opt
 Thwack doesn't try to solve every problem, like Axios does, but instead provides the solution for 98% of what users _really_ need. This is what gives Thwack its feather-light footprint.
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
 Methods
 </h2>
 
@@ -92,7 +93,7 @@ For more information on Thwack's event system, see [Thwack events](#thwack-event
 - `thwack.removeEventListener(type: string,callback: (event:ThwackEvent) => void ): void;`
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
 ThwackOptions
 </h2>
 
@@ -240,7 +241,7 @@ See this example running on [CodeSandbox]().
 As you can see, using `responseParserMap` is a great way to eliminate the need to set `responseType` for different Thwack calls.
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
 ThwackResponse
 </h2>
 
@@ -281,7 +282,7 @@ The complete `options` object that processed the request. This `options` will be
 The complete HTTP `Response` object as returned by `fetch`.
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
 ThwackResponseError
 </h2>
 
@@ -305,7 +306,7 @@ try {
 A `ThwackResponseError` has all of the properties of a normal JavaScript `Error` plus a `thwackResponse` property with the same properties as a success status.
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
 Instances
 </h2>
 
@@ -316,7 +317,7 @@ Inversely, parents can use `addEventListener` to monitor their children (see the
 <img alt="flow char" src="https://user-images.githubusercontent.com/887639/79186980-06040480-7de9-11ea-8362-a5b187d231b8.png" width="476">
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
 Thwack events
 </h2>
 
@@ -336,7 +337,7 @@ thwack.addEventListener('request', callback);
 The event is fired _after_ the HTTP headers are received, but _before_ the body is streamed and parsed. Listeners will receive a `ThwackResponseEvent` object with a `thwackResponse` key set to the response.
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
 How to
 </h2>
 
@@ -348,9 +349,7 @@ Use an `AbortController` to cancel requests by passing its `signal` in the `thwa
 const controller = new AbortController();
 const { signal } = controller;
 
-thwack(url, { signal })
-  .then(handleResponse)
-  .catch(handleError);
+thwack(url, { signal }).then(handleResponse).catch(handleError);
 
 controller.abort();
 ```
@@ -454,7 +453,6 @@ We could accomplish this by replacing `options.url` in the request event listene
 
 ```js
 thwack.addEventListener('request', (event) => {
-
   if (Math.random() >= 0.02) {
     return;
   }
@@ -470,20 +468,23 @@ thwack.addEventListener('request', (event) => {
 ```
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
 Credits
 </h2>
 
 Thwack is **heavily** inspired by the [Axios](https://github.com/Axios/Axios). Thanks [Matt](https://twitter.com/mzabriskie)!
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79184401-077dfe80-7de2-11ea-859e-ceaaf1364077.png" width="20">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
 License
 </h2>
 
-[MIT](LICENSE)
+Licensed under [MIT](LICENSE)
 
-## Contributors ✨
+<h2>
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
+Contributors ✨
+</h2>
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
@@ -504,6 +505,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
