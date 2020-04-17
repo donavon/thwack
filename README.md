@@ -498,6 +498,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://github.com/bargar"><img src="https://avatars2.githubusercontent.com/u/1666818?v=4" width="100px;" alt=""/><br /><sub><b>Jeremy Bargar</b></sub></a><br /><a href="https://github.com/donavon/thwack/commits?author=bargar" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/brookescarlett"><img src="https://avatars1.githubusercontent.com/u/26016393?v=4" width="100px;" alt=""/><br /><sub><b>Brooke Scarlett Yalof</b></sub></a><br /><a href="https://github.com/donavon/thwack/commits?author=brookescarlett" title="Documentation">📖</a></td>
     <td align="center"><a href="https://twitter.com/karlhorky"><img src="https://avatars2.githubusercontent.com/u/1935696?v=4" width="100px;" alt=""/><br /><sub><b>Karl Horky</b></sub></a><br /><a href="https://github.com/donavon/thwack/commits?author=karlhorky" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://kojikanao.netlify.com/"><img src="https://avatars0.githubusercontent.com/u/474225?v=4" width="100px;" alt=""/><br /><sub><b>Koji</b></sub></a><br /><a href="https://github.com/donavon/thwack/commits?author=koji" title="Documentation">📖</a> <a href="https://github.com/donavon/thwack/commits?author=koji" title="Code">💻</a></td>
   </tr>
 </table>
 
