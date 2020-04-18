@@ -23,6 +23,7 @@ Thwack is:
 - 🔎 Small — Thwack is only ~1.5k gzipped
 - 👩‍🏫 Smarter — Built with modern JavaScript
 - 😘 Familiar — Thwack uses an Axios-like interface
+- 🅰️ Typed - Easier inclusion for TypeScript projects
 
 > This README is a work in progress. You can also ask me a question [on Twitter](https://twitter.com/donavon).
 
