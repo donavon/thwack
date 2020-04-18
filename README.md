@@ -502,11 +502,13 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https://twitter.com/karlhorky"><img src="https://avatars2.githubusercontent.com/u/1935696?v=4" width="100px;" alt=""/><br /><sub><b>Karl Horky</b></sub></a><br /><a href="https://github.com/donavon/thwack/commits?author=karlhorky" title="Documentation">📖</a></td>
     <td align="center"><a href="https://kojikanao.netlify.com/"><img src="https://avatars0.githubusercontent.com/u/474225?v=4" width="100px;" alt=""/><br /><sub><b>Koji</b></sub></a><br /><a href="https://github.com/donavon/thwack/commits?author=koji" title="Documentation">📖</a> <a href="https://github.com/donavon/thwack/commits?author=koji" title="Code">💻</a></td>
   </tr>
+  <tr>
+    <td align="center"><a href="https://github.com/tomByrer"><img src="https://avatars2.githubusercontent.com/u/1308419?v=4" width="100px;" alt=""/><br /><sub><b>Tom Byrer</b></sub></a><br /><a href="https://github.com/donavon/thwack/commits?author=tomByrer" title="Documentation">📖</a></td>
+  </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
