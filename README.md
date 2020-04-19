@@ -504,6 +504,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/tomByrer"><img src="https://avatars2.githubusercontent.com/u/1308419?v=4" width="100px;" alt=""/><br /><sub><b>Tom Byrer</b></sub></a><br /><a href="https://github.com/donavon/thwack/commits?author=tomByrer" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://iansutherland.ca/"><img src="https://avatars2.githubusercontent.com/u/433725?v=4" width="100px;" alt=""/><br /><sub><b>Ian Sutherland</b></sub></a><br /><a href="https://github.com/donavon/thwack/commits?author=iansu" title="Code">💻</a></td>
   </tr>
 </table>
 
