@@ -1,11 +1,7 @@
-import ThwackEvent from './ThwackEvent';
+import ThwackResponseBaseEvent from './ThwackResponseBaseEvent';
 
-export default class ThwackResponseEvent extends ThwackEvent {
+export default class ThwackResponseEvent extends ThwackResponseBaseEvent {
   constructor(thwackResponse) {
-    super('response');
-    this.thwackResponse = thwackResponse;
-
-    // if a listener calls `preventDefault` it MUST set to `Promise<ThwackResponse>`
-    this.promise = undefined;
+    super('response', thwackResponse);
   }
 }

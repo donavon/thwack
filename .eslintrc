@@ -17,7 +17,8 @@
     "no-underscore-dangle": "off",
     "no-void": "off",
     "no-return-assign": "off",
-    "no-throw-literal": "off"
+    "no-throw-literal": "off",
+    "no-console": "error"
   },
   "env": {
     "browser": true

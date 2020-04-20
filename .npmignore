@@ -4,8 +4,8 @@ src
 .eslintrc
 .babelrc
 __tests__
+__test_utils__
 coverage
 .prettierrc
 .travis.yml
 .all-contributorsrc
-jestUtils.js

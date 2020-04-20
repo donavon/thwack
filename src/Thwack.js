@@ -1,9 +1,11 @@
 import request from './request';
 import combineOptions from './utils/combineOptions';
 import ThwackResponseError from './ThwackErrors/ThwackResponseError';
+import ThwackRequestEvent from './ThwackEvents/ThwackRequestEvent';
+import ThwackResponseEvent from './ThwackEvents/ThwackResponseEvent';
+import ThwackResponse from './ThwackResponse';
 import buildUrl from './utils/buildUrl';
 import resolveOptionsFromArgs from './utils/resolveOptionsFromArgs';
-import ThwackStopPropagationError from './ThwackErrors/ThwackStopPropagationError';
 
 // TODO extend EventTarget eventually
 // this will simplify the add/remove event listener stuff
@@ -17,10 +19,16 @@ export default class Thwack {
     instance._parent = parent;
     instance.defaultOptions = defaultOptions;
     instance.ThwackResponseError = ThwackResponseError;
+    instance.ThwackRequestEvent = ThwackRequestEvent;
+    instance.ThwackResponseEvent = ThwackResponseEvent;
+    instance.ThwackResponse = ThwackResponse;
 
+    instance._depth = 0; // number of concurrent requests (errors at options.maxDepth)
     instance._listeners = {
       request: [],
       response: [],
+      data: [],
+      error: [],
     };
 
     instance.request = request.bind(instance);
@@ -67,22 +75,48 @@ export default class Thwack {
     );
   }
 
-  dispatchEvent(initialEvent) {
-    const dispatchInstanceEvent = (instance, event) => {
+  dispatchEvent(event) {
+    const buildStack = (instance) => {
+      const thisStack = instance._listeners[event.type];
       if (instance._parent) {
-        dispatchInstanceEvent(instance._parent, event);
+        return [buildStack(instance._parent), thisStack];
       }
-      const stack = [...instance._listeners[event.type]];
-      stack.forEach((listener) => listener(event));
+      return thisStack;
     };
 
-    try {
-      dispatchInstanceEvent(this, initialEvent);
-    } catch (ex) {
-      if (!(ex instanceof ThwackStopPropagationError)) {
-        throw ex;
-      }
-    }
-    return !initialEvent.defaultPrevented;
+    const stack = buildStack(this).flat(Infinity);
+    return (
+      stack
+        .reduce(
+          (promise, listener) =>
+            promise
+              // call our next callback (unless propagationStopped was called)
+              .then(
+                // TODO use nullish coalescing when supported by microbundle, like this:
+                // () => !event.propagationStopped ?? listener(event)
+                () => {
+                  this._depth += 1;
+                  if (this._depth >= 5) {
+                    throw new Error('Thwack: maximum request depth reached');
+                  }
+                  return event.propagationStopped ? undefined : listener(event);
+                }
+              )
+              .finally(() => {
+                this._depth -= 1;
+              })
+              // if callback returned payload (or a promise that resolves to payload)
+              // then set the payload in the event object
+              .then((payload) => {
+                if (payload !== undefined) {
+                  // eslint-disable-next-line no-param-reassign
+                  event._payload = payload;
+                }
+              }),
+          Promise.resolve() // start with a promise
+        )
+        // finally, return the event payload to the caller
+        .then(() => event._payload)
+    );
   }
 }

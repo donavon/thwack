@@ -1,10 +1,18 @@
 export default class ThwackResponse {
   constructor(response, options) {
-    const { status, ok, statusText, headers } = response;
+    const {
+      status,
+      statusText = `Status ${status}`,
+      data,
+      headers = [],
+    } = response;
     this.status = status;
     this.statusText = statusText;
-    this.ok = ok;
-    this.headers = Object.fromEntries(headers.entries());
+    this.ok = status >= 200 && status < 300;
+    this.data = data;
+    this.headers = Array.isArray(headers)
+      ? headers
+      : Object.fromEntries(headers.entries());
     this.options = options;
     this.response = response;
   }

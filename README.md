@@ -13,22 +13,23 @@ Thwack. A tiny modern data fetching solution
 [![Github stars](https://img.shields.io/badge/%E2%AD%90%EF%B8%8F-it%20on%20GitHub-blue)](https://github.com/donavon/thwack/stargazers)
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
 TL;DR
 </h2>
 
 Thwack is:
 
-- 💻 Modern - Thwack is an HTTP data fetching solution built for modern browsers
+- 💻 Modern — Thwack is an HTTP data fetching solution built for modern browsers
 - 🔎 Small — Thwack is only ~1.5k gzipped
 - 👩‍🏫 Smarter — Built with modern JavaScript
 - 😘 Familiar — Thwack uses an Axios-like interface
-- 🅰️ Typed - Easier inclusion for TypeScript projects
+- 🅰️ Typed — Easier inclusion for TypeScript projects
+- ✨ Support for IE11 and NodeJS
 
 > This README is a work in progress. You can also ask me a question [on Twitter](https://twitter.com/donavon).
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
 Installation
 </h2>
 
@@ -43,7 +44,7 @@ $ yarn add thwack
 ```
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
 Why Thwack over Axios?
 </h2>
 
@@ -56,7 +57,7 @@ They support the same API, but there are some differences — mainly around `opt
 Thwack doesn't try to solve every problem, like Axios does, but instead provides the solution for 98% of what users _really_ need. This is what gives Thwack its feather-light footprint.
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
 Methods
 </h2>
 
@@ -87,14 +88,16 @@ Methods
 
 ### Event listeners
 
+Thwack supports the following event types: `request`, `response`, `data`, and `error`.
+
 For more information on Thwack's event system, see [Thwack events](#thwack-events) below.
 
-- `thwack.addEventListener(type: string,callback: (event:ThwackEvent) => void ): void;`
+- `thwack.addEventListener(type: string, callback: (event:ThwackEvent) => Promise<any> ): void;`
 
-- `thwack.removeEventListener(type: string,callback: (event:ThwackEvent) => void ): void;`
+- `thwack.removeEventListener(type: string, callback: (event:ThwackEvent) => Promise<any> ): void;`
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
 ThwackOptions
 </h2>
 
@@ -181,6 +184,10 @@ http://example.com/orders/123
 
 If you don't specify a `:name`, or there are more `param`s than there are `:name`s, then the remaining key/values will be set as search parameters (i.e. `?key=value`).
 
+### `maxDepth`
+
+The maximum level of recursive requests that can be made before Thwack throws an error. This is used to prevent a event callback from causing a recursive loop if it issues another `request` without proper guards in place. Default = 5.
+
 ### `responseType`
 
 By default, Thwack will automatically determine how to decode the response data based on the value of the response header `content-type`. However, if the server responds with an incorrect value, you can override the parser by setting `responseType`. Valid values are `arraybuffer`, `document` (i.e. `formdata`), `json`, `text`, `stream`, and `blob`. Defaults to automatic.
@@ -242,7 +249,7 @@ See this example running on [CodeSandbox]().
 As you can see, using `responseParserMap` is a great way to eliminate the need to set `responseType` for different Thwack calls.
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
 ThwackResponse
 </h2>
 
@@ -283,7 +290,7 @@ The complete `options` object that processed the request. This `options` will be
 The complete HTTP `Response` object as returned by `fetch`.
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
 ThwackResponseError
 </h2>
 
@@ -307,7 +314,7 @@ try {
 A `ThwackResponseError` has all of the properties of a normal JavaScript `Error` plus a `thwackResponse` property with the same properties as a success status.
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
 Instances
 </h2>
 
@@ -318,7 +325,7 @@ Inversely, parents can use `addEventListener` to monitor their children (see the
 <img alt="flow char" src="https://user-images.githubusercontent.com/887639/79186980-06040480-7de9-11ea-8362-a5b187d231b8.png" width="476">
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
 Thwack events
 </h2>
 
@@ -333,12 +340,58 @@ Whenever any part of the application calls one of the data fetching methods, a `
 thwack.addEventListener('request', callback);
 ```
 
+> Note that callbacks can be `async` allowing you to defer Thwack so that you might, for example, go out and fetch data a different URL before proceeding.
+
 ### The `response` event
 
 The event is fired _after_ the HTTP headers are received, but _before_ the body is streamed and parsed. Listeners will receive a `ThwackResponseEvent` object with a `thwackResponse` key set to the response.
 
+### The `data` event
+
+The event is fired after the body is streamed and parsed. It is fired only if the fetch returned a 2xx status code. Listeners will receive a `ThwackDataEvent` object with a `thwackResponse` key set to the response.
+
+### The `error` event
+
+The event is fired after the body is streamed and parsed. It is fired if the fetch returned a non-2xx status code. Listeners will receive a `ThwackErrorEvent` object with a `thwackResponse` key set to the response.
+
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
+IE11
+</h2>
+
+If your app requires Internet Explorer 11 support, you can still use Thwack, but it will require polyfills for `Array#flat`, `Array#entries`, and `Object#fromEntries`. You can either provide these polyfills yourself, or use the following convenience import instead.
+
+```js
+import thwack from 'thwack/ie';
+```
+
+Note that this will work for any browser, not just IE11, but it will increase your bundle size slightly.
+
+<h2>
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
+NodeJS
+</h2>
+
+Thwack will work on NodeJS, but requires a polyfill for `window.fetch`. Luckilly, there is a wonderful polyfill called [`node-fetch`](https://github.com/node-fetch/node-fetch) that you can use.
+
+If you are using NodeJS verson 10, you will also need a polyfill for `Array#flat` and `Object#fromEntries`. NodeJS version 11+ has these methods and does not require a polyfill.
+
+You can either provide these polyfills yourself, or use the one of the following convenience imports instead. If you are running NodeJS 11+, use:
+
+```js
+import thwack from 'thwack/node'; // NodeJS version 11+
+```
+
+If you are running on NodeJS 10, use:
+
+```js
+import thwack from 'thwack/node10'; // NodeJS version 10
+```
+
+> Note: The `responseType` of `blob` is not supported on NodeJS.
+
+<h2>
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
 How to
 </h2>
 
@@ -414,12 +467,19 @@ const App = () ={
 Let's say you have an app that has made a request for some user data. If the app is hitting a specific URL (say `users`) and querying for a particular user ID (say `123`), you would like to prevent the request from hitting the server and instead mock the results.
 
 ```js
-thwack.addEventListener('request', (event) => {
+thwack.addEventListener('request', async (event) => {
   const { options } = event;
   if (options.url === 'users' && options.params.id === 123) {
 
+    // tells Thwack to return `event.promise` instead of handling the event itself
+    event.preventDefault();
+
+    // stop other listeners (if any) from further processing
+    event.stopPropagation();
+
+    // because we called `preventDefault` above,
     // the caller's request will be resolved to this `ThwackResponse`
-    event.promise = Promise.resolve({
+    return new thwack.ThwackResponse({
       status: 200,
       ok: true
       headers: {
@@ -430,12 +490,6 @@ thwack.addEventListener('request', (event) => {
         email: 'fakeuser@example.com',
       }
     });
-
-    // tells Thwack to return `event.promise` instead of handling the event itself
-    event.preventDefault();
-
-    // stop other listeners (if any) from further processing
-    event.stopPropagation();
   }
 });
 ```
@@ -469,21 +523,21 @@ thwack.addEventListener('request', (event) => {
 ```
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
 Credits
 </h2>
 
 Thwack is **heavily** inspired by the [Axios](https://github.com/Axios/Axios). Thanks [Matt](https://twitter.com/mzabriskie)!
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
 License
 </h2>
 
 Licensed under [MIT](LICENSE)
 
 <h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79573303-6f577200-808c-11ea-83e0-e69d937bf0c4.png" width="22">
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
 Contributors ✨
 </h2>
 
@@ -510,6 +564,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

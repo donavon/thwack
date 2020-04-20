@@ -2,9 +2,9 @@
   "name": "thwack",
   "publishConfig": {
     "access": "public",
-    "tag": "latest"
+    "tag": "next"
   },
-  "version": "0.1.0",
+  "version": "0.2.0-beta.3",
   "description": "A tiny modern data fetching solution.",
   "main": "dist/thwack.js",
   "umd:main": "dist/thwack.umd.js",
@@ -37,6 +37,10 @@
     "promise"
   ],
   "author": "Donavon West <github@donavon.com> (https://github.com/donavon)",
+  "dependencies": {
+    "core-js": "^3.6.5",
+    "node-fetch": "^2.6.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
@@ -52,6 +56,10 @@
     "rimraf": "^3.0.2"
   },
   "jest": {
+    "collectCoverageFrom": [
+      "**/src/**/*.js",
+      "!**/__test_utils__/**"
+    ],
     "coverageThreshold": {
       "global": {
         "branches": 100,

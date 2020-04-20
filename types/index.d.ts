@@ -2,7 +2,7 @@ export interface KeyValue {
   [key: string]: string;
 }
 
-export type ThwackEventType = 'request' | 'response';
+export type ThwackEventType = 'request' | 'response' | 'data' | 'error';
 
 export type ResponseType =
   | 'arraybuffer'
@@ -58,13 +58,28 @@ export interface ThwackError extends Error {
 
 export interface ThwackRequestEvent extends Event {
   options: ThwackOptions;
-  promise?: Promise<ThwackResponse>;
 }
-
 export interface ThwackResponseEvent extends Event {
   thwackResponse: ThwackResponse;
-  promise?: Promise<ThwackResponse>;
 }
+export interface ThwackDataEvent extends Event {
+  thwackResponse: ThwackResponse;
+}
+export interface ThwackErrorEvent extends Event {
+  thwackResponse: ThwackResponse;
+}
+
+export type ThwackCallbackType =
+  | void
+  | ThwackResponse
+  | Promise<ThwackResponse>;
+
+export type ThwackRequestCallbackType =
+  | void
+  | ThwackResponse
+  | Promise<ThwackResponse>
+  | ThwackOptions
+  | Promise<ThwackOptions>;
 
 export interface ThwackInstance {
   (url: string, options?: ThwackOptions): Promise<ThwackResponse>;
@@ -82,20 +97,36 @@ export interface ThwackInstance {
 
   addEventListener(
     type: 'request',
-    callback: (event: ThwackRequestEvent) => void
+    callback: (event: ThwackRequestEvent) => ThwackRequestCallbackType
   ): void;
   addEventListener(
     type: 'response',
-    callback: (event: ThwackResonseEvent) => void
+    callback: (event: ThwackResonseEvent) => ThwackCallbackType
+  ): void;
+  addEventListener(
+    type: 'data',
+    callback: (event: ThwackDataEvent) => ThwackCallbackType
+  ): void;
+  addEventListener(
+    type: 'error',
+    callback: (event: ThwackErrorEvent) => ThwackCallbackType
   ): void;
 
   removeEventListener(
     type: 'request',
-    callback: (event: ThwackRequestEvent) => void
+    callback: (event: ThwackRequestEvent) => ThwackRequestCallbackType
   ): void;
   removeEventListener(
     type: 'response',
-    callback: (event: ThwackResonseEvent) => void
+    callback: (event: ThwackResonseEvent) => ThwackCallbackType
+  ): void;
+  removeEventListener(
+    type: 'data',
+    callback: (event: ThwackDataEvent) => ThwackCallbackType
+  ): void;
+  removeEventListener(
+    type: 'error',
+    callback: (event: ThwackErrorEvent) => ThwackCallbackType
   ): void;
 }
 
