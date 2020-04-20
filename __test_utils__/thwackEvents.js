@@ -652,9 +652,24 @@ const run = async () => {
           e.preventDefault();
           const { options } = e.thwackResponse;
           return new thwack.ThwackResponse(
-            { ok: true, status: 200, data: 'mock response' },
+            { status: 200, data: 'mock response' },
             options
           );
+        };
+        thwack.addEventListener('error', callback);
+        const resp = await thwack('http://foo.com', {
+          fetch,
+          foo: 'bar',
+        });
+        thwack.removeEventListener('error', callback);
+        expect(resp.data).toEqual('mock response');
+      });
+      it('a callback can call preventDefault() to respond with "fake" data (defaulting status)', async () => {
+        const fetch = createMockFetch({ status: 500 });
+        const callback = (e) => {
+          e.preventDefault();
+          const { options } = e.thwackResponse;
+          return new thwack.ThwackResponse({ data: 'mock response' }, options);
         };
         thwack.addEventListener('error', callback);
         const resp = await thwack('http://foo.com', {

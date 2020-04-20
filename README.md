@@ -470,25 +470,19 @@ Let's say you have an app that has made a request for some user data. If the app
 thwack.addEventListener('request', async (event) => {
   const { options } = event;
   if (options.url === 'users' && options.params.id === 123) {
-
-    // tells Thwack to return `event.promise` instead of handling the event itself
+    // tells Thwack to use the returned value instead of handling the event itself
     event.preventDefault();
 
     // stop other listeners (if any) from further processing
     event.stopPropagation();
 
-    // because we called `preventDefault` above,
-    // the caller's request will be resolved to this `ThwackResponse`
+    // because we called `preventDefault` above, the caller's request
+    // will be resolved to this `ThwackResponse` (defaults to status of 200)
     return new thwack.ThwackResponse({
-      status: 200,
-      ok: true
-      headers: {
-        'content-type': 'application/json',
-      },
       data: {
         name: 'Fake Username',
         email: 'fakeuser@example.com',
-      }
+      },
     });
   }
 });

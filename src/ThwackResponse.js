@@ -1,7 +1,7 @@
 export default class ThwackResponse {
   constructor(response, options) {
     const {
-      status,
+      status = 200,
       statusText = `Status ${status}`,
       data,
       headers = [],
