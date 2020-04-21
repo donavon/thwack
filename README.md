@@ -165,6 +165,25 @@ some-other-header': 'My Awesome App'
 
 ```
 
+### `defaults`
+
+This allows you to read/set the default options for this instance and, in effect, any child instances.
+
+Example:
+
+```js
+thwack.defaults.baseURL = 'https://example.com/api';
+```
+
+For an instance, `defaults` is the same object passed to `create`. For example, the following will output "https://example.com/api".
+
+```js
+const instance = thwack.create({
+  baseURL: 'https://example.com/api',
+});
+console.log(instance.defaults.baseURL);
+```
+
 ### `params`
 
 This is an optional object that contains the key/value pairs that will be used to build the fetch URL. Is there are any `:key` segments of the `baseURL` or the `url`, they will be replaced with the value of the matching key. For example, if you did this:

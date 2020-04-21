@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
 const thwack = require('..');
 
-thwack.addEventListener('request', ({ options }) => ({ ...options, fetch }));
+thwack.defaults.fetch = fetch;
 
 module.exports = thwack;

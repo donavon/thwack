@@ -9,8 +9,8 @@ const request = async function (requestOptions) {
   // Compute the options to use
   // 1. combine options from:
   //  a. passed `requestOptions`
-  //  b. `this.defaultOptions` (i.e. when instance was created)
-  //  c. and all parents' `this.defaultOptions`
+  //  b. `this.defaults` (i.e. when instance was created)
+  //  c. and all parents' `this.defaults`
   // 2. dispatch those options to any listeners (they _may_ change them)
   //    by returning a new options as payload
   // 3. set options to the returned payload unless...

@@ -10,14 +10,14 @@ import resolveOptionsFromArgs from './utils/resolveOptionsFromArgs';
 // TODO extend EventTarget eventually
 // this will simplify the add/remove event listener stuff
 export default class Thwack {
-  constructor(defaultOptions, parent) {
+  constructor(defaults, parent) {
     // accepts (url, options) or just (options), but calls
     // this.request with just (options)
     const instance = (...args) =>
       instance.request(resolveOptionsFromArgs(args));
 
     instance._parent = parent;
-    instance.defaultOptions = defaultOptions;
+    instance.defaults = defaults;
     instance.ThwackResponseError = ThwackResponseError;
     instance.ThwackRequestEvent = ThwackRequestEvent;
     instance.ThwackResponseEvent = ThwackResponseEvent;
