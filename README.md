@@ -350,6 +350,10 @@ Thwack events
 
 Combined with instances, the Thwack event system is what makes Thwack extremely powerful. With it, you can listen for different events.
 
+Here is the event flow for all events. AS you can see, it is possible for your code to get into an endless loop, should your callback blindly issue a `request()` without checking to see if it's already done so, so take caution.
+
+![thwack events](https://user-images.githubusercontent.com/887639/79867660-aee3ce00-83ac-11ea-94fd-4078c1a36244.png)
+
 ### The `request` event
 
 Whenever any part of the application calls one of the data fetching methods, a `request` event is fired. Any listeners will get a `ThwackRequestEvent` object which has the `options` of the call in `event.options`. These event listeners can do something as simple as ([log the event](#log-every-request)) or as complicated as preventing the request and returning a response with ([mock data](#return-mock-data))
@@ -391,11 +395,11 @@ Note that this will work for any browser, not just IE11, but it will increase yo
 NodeJS
 </h2>
 
-Thwack will work on NodeJS, but requires a polyfill for `window.fetch`. Luckilly, there is a wonderful polyfill called [`node-fetch`](https://github.com/node-fetch/node-fetch) that you can use.
+Thwack will work on NodeJS, but requires a polyfill for `window.fetch`. Luckily, there is a wonderful polyfill called [`node-fetch`](https://github.com/node-fetch/node-fetch) that you can use.
 
-If you are using NodeJS verson 10, you will also need a polyfill for `Array#flat` and `Object#fromEntries`. NodeJS version 11+ has these methods and does not require a polyfill.
+If you are using NodeJS version 10, you will also need a polyfill for `Array#flat` and `Object#fromEntries`. NodeJS version 11+ has these methods and does not require a polyfill.
 
-You can either provide these polyfills yourself, or use the one of the following convenience imports instead. If you are running NodeJS 11+, use:
+You can either provide these polyfills yourself, or use one of the following convenience imports instead. If you are running NodeJS 11+, use:
 
 ```js
 import thwack from 'thwack/node'; // NodeJS version 11+
@@ -485,6 +489,8 @@ const App = () ={
 
 Let's say you have an app that has made a request for some user data. If the app is hitting a specific URL (say `users`) and querying for a particular user ID (say `123`), you would like to prevent the request from hitting the server and instead mock the results.
 
+The `status` in the `ThwackResponse` defaults to 200, so unless you need to mock a non-OK response, you only need to return `data`.
+
 ```js
 thwack.addEventListener('request', async (event) => {
   const { options } = event;
@@ -507,13 +513,52 @@ thwack.addEventListener('request', async (event) => {
 });
 ```
 
+### Convert DTO to Model
+
+Often it is desirable to convert a DTO (Data Transfer Object) into something easier to consume by the client. In this example below, we convert a complex DTO into `firstName`, `lastName`, `avatar`, and `email`. Other data elements that are returned from the API call are ignored.
+
+You can see an example of DTO conversion, logging, and returning fake data in this sample app.
+
+<div>
+<img src="https://user-images.githubusercontent.com/887639/79865700-94f4bc00-83a9-11ea-9de6-9f204d5857c8.png" width="500" height="526" alt="Mickey Mouse sample app">
+</div>
+
+You can [view the source code](https://codesandbox.io/s/sharp-chatelet-mje3w?file=/src/App.js) on CodeSandbox.
+
 ### Load an Image as a Blob
+
+In this example, we have a React Hook that loads an image as a Blob URL. It caches the URL to Blob URL mapping in session storage. Once loaded, any refresh of the page will instantaneously load the image from Blob URL.
+
+```js
+const useBlobUrl = (imageUrl) => {
+  const [objectURL, setObjectURL] = useState('');
+
+  useEffect(() => {
+    let url = sessionStorage.getItem(imageUrl);
+
+    async function fetchData() {
+      if (!url) {
+        const { data } = await thwack.get(imageUrl, {
+          responseType: 'blob',
+        });
+        url = URL.createObjectURL(data);
+        sessionStorage.setItem(imageUrl, url);
+      }
+      setObjectURL(url);
+    }
+
+    fetchData();
+  }, [imageUrl]);
+
+  return objectURL;
+};
+```
 
 See this example on [CodeSandbox](https://codesandbox.io/s/thwack-demo-load-image-as-blob-x0rnl?file=/src/ImageBlob/useBlobUrl.js)
 
 ### Selective routing
 
-Rght now you have a REST endpoint at `https://api.example.com`. Suppose you've published a new REST endpoint o a different URL and would like to start slowly routing 2% of network traffic to these new servers.
+Right now you have a REST endpoint at `https://api.example.com`. Suppose you've published a new REST endpoint o a different URL and would like to start slowly routing 2% of network traffic to these new servers.
 
 > Note: normally this would be handled by your load balancer on the back-end. It's shown here for demonstration purposes only.
 
