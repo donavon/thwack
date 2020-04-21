@@ -101,7 +101,7 @@ export interface ThwackInstance {
   ): void;
   addEventListener(
     type: 'response',
-    callback: (event: ThwackResonseEvent) => ThwackCallbackType
+    callback: (event: ThwackResponseEvent) => ThwackCallbackType
   ): void;
   addEventListener(
     type: 'data',
@@ -118,7 +118,7 @@ export interface ThwackInstance {
   ): void;
   removeEventListener(
     type: 'response',
-    callback: (event: ThwackResonseEvent) => ThwackCallbackType
+    callback: (event: ThwackResponseEvent) => ThwackCallbackType
   ): void;
   removeEventListener(
     type: 'data',
