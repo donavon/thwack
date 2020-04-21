@@ -39,11 +39,11 @@ export interface ThwackOptions {
   responseType?: ResponseType;
 }
 
-export interface ThwackResponse {
+export interface ThwackResponse<T = any> {
   status: number;
   statusText: string;
   headers: KeyValue;
-  data: any;
+  data: T;
   response: Response;
   options: ThwackOptions;
 }
