@@ -553,12 +553,12 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://github.com/tomByrer"><img src="https://avatars2.githubusercontent.com/u/1308419?v=4" width="100px;" alt=""/><br /><sub><b>Tom Byrer</b></sub></a><br /><a href="https://github.com/donavon/thwack/commits?author=tomByrer" title="Documentation">📖</a></td>
     <td align="center"><a href="https://iansutherland.ca/"><img src="https://avatars2.githubusercontent.com/u/433725?v=4" width="100px;" alt=""/><br /><sub><b>Ian Sutherland</b></sub></a><br /><a href="https://github.com/donavon/thwack/commits?author=iansu" title="Code">💻</a></td>
+    <td align="center"><a href="https:///www.blakeyoder.com"><img src="https://avatars0.githubusercontent.com/u/5393338?v=4" width="100px;" alt=""/><br /><sub><b>Blake Yoder</b></sub></a><br /><a href="https://github.com/donavon/thwack/commits?author=blakeyoder" title="Code">💻</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
