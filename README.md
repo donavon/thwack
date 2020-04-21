@@ -24,7 +24,7 @@ Thwack is:
 - 👩‍🏫 Smarter — Built with modern JavaScript
 - 😘 Familiar — Thwack uses an Axios-like interface
 - 🅰️ Typed — Easier inclusion for TypeScript projects
-- ✨ Support for IE11 and NodeJS
+- ✨ Support for NodeJS 10 and 12
 
 > This README is a work in progress. You can also ask me a question [on Twitter](https://twitter.com/donavon).
 
@@ -376,19 +376,6 @@ The event is fired after the body is streamed and parsed. It is fired only if th
 ### The `error` event
 
 The event is fired after the body is streamed and parsed. It is fired if the fetch returned a non-2xx status code. Listeners will receive a `ThwackErrorEvent` object with a `thwackResponse` key set to the response.
-
-<h2>
-<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
-IE11
-</h2>
-
-If your app requires Internet Explorer 11 support, you can still use Thwack, but it will require polyfills for `Array#flat`, `Array#entries`, and `Object#fromEntries`. You can either provide these polyfills yourself, or use the following convenience import instead.
-
-```js
-import thwack from 'thwack/ie';
-```
-
-Note that this will work for any browser, not just IE11, but it will increase your bundle size slightly.
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
