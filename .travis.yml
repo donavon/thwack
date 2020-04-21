@@ -1,5 +1,7 @@
 language: node_js
 
+os: linux
+
 node_js:
   - '10'
   - '12'
@@ -9,9 +11,10 @@ jobs:
     - stage: test
       script: npm t
     - stage: npm release
-      if: branch = master
       deploy:
         provider: npm
         email: $NPM_EMAIL
-        api_key: $NPM_TOKEN
-        skip_cleanup: true
+        api_token: $NPM_TOKEN
+        on:
+          branch: master
+          tags: true
