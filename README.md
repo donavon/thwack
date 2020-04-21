@@ -226,13 +226,13 @@ What is returned by Thwack is determined by the following table. The "fetch meth
 
 Another useful way to determine which response parser to use is with `responseParserMap`. It allows you to set up a mapping between content types and parser types.
 
-Thwack uses the following map as the default, which allows `json` and `formdata` decoding. If there are no matches, the response parser defaults to `text`. You may specify a default by setting the special `.default` key.
+Thwack uses the following map as the default, which allows `json` and `formdata` decoding. If there are no matches, the response parser defaults to `text`. You may specify a default by setting the special `*/*` key.
 
 ```json
 {
   "application/json": "json",
   "multipart/form-data": "formdata",
-  ".default": "text"
+  "*/*": "text"
 };
 ```
 
