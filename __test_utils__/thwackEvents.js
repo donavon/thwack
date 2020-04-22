@@ -6,6 +6,8 @@ import ThwackErrorEvent from '../src/ThwackEvents/ThwackErrorEvent';
 
 import { createMockFetch } from './jestUtils';
 
+const { ThwackResponseError, ThwackResponse } = thwack;
+
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const run = async () => {
@@ -309,8 +311,13 @@ const run = async () => {
           // e.promise = Promise.resolve('preventDefault');
           e.preventDefault();
           const { options } = e;
-          return new thwack.ThwackResponse(
-            { ok: true, status: 200, data: 'preventDefault' },
+          return new ThwackResponse(
+            {
+              ok: true,
+              status: 200,
+              data: 'preventDefault',
+              headers: { foo: 'bar' },
+            },
             options
           );
         };
@@ -348,6 +355,26 @@ const run = async () => {
           thwack.removeEventListener('request', callback);
         }
       });
+      it('a callback that calls preventDefault() must return a ThwackResponse with at least status', async () => {
+        const fetch = createMockFetch();
+        const callback = async (e) => {
+          // e.promise = Promise.resolve('preventDefault');
+          e.preventDefault();
+          const { options } = e;
+          return new ThwackResponse({}, options);
+        };
+        const callback2 = () => {};
+        thwack.addEventListener('request', callback);
+        thwack.addEventListener('request', callback2);
+        const resp = await thwack('http://foo.com', {
+          fetch,
+          foo: 'bar',
+        });
+        thwack.removeEventListener('request', callback2);
+        thwack.removeEventListener('request', callback);
+        expect(fetch).toHaveBeenCalledTimes(0);
+        expect(resp.status).toBe(200);
+      });
     });
 
     describe('calling addEventListener("response")', () => {
@@ -371,7 +398,7 @@ const run = async () => {
           // await sleep(100);
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new thwack.ThwackResponse(
+          return new ThwackResponse(
             { ok: true, status: 200, data: 'mock response' },
             options
           );
@@ -390,7 +417,7 @@ const run = async () => {
           await sleep(100);
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new thwack.ThwackResponse(
+          return new ThwackResponse(
             { ok: true, status: 200, data: 'mock response' },
             options
           );
@@ -409,10 +436,7 @@ const run = async () => {
           // await sleep(100);
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new thwack.ThwackResponse(
-            { status: 409, data: 'boo!' },
-            options
-          );
+          return new ThwackResponse({ status: 409, data: 'boo!' }, options);
         };
         thwack.addEventListener('response', callback);
         try {
@@ -421,7 +445,7 @@ const run = async () => {
             foo: 'bar',
           });
         } catch (ex) {
-          expect(ex instanceof thwack.ThwackResponseError).toBe(true);
+          expect(ex instanceof ThwackResponseError).toBe(true);
           expect(ex.thwackResponse.data).toBe('boo!');
         } finally {
           thwack.removeEventListener('response', callback);
@@ -433,7 +457,7 @@ const run = async () => {
           // await sleep(100);
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new thwack.ThwackResponse({ status: 409 }, options);
+          return new ThwackResponse({ status: 409 }, options);
         };
         thwack.addEventListener('response', callback);
         try {
@@ -442,7 +466,7 @@ const run = async () => {
             foo: 'bar',
           });
         } catch (ex) {
-          expect(ex instanceof thwack.ThwackResponseError).toBe(true);
+          expect(ex instanceof ThwackResponseError).toBe(true);
         } finally {
           thwack.removeEventListener('response', callback);
         }
@@ -509,7 +533,7 @@ const run = async () => {
           // await sleep(100);
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new thwack.ThwackResponse(
+          return new ThwackResponse(
             { ok: true, status: 200, data: 'mock response' },
             options
           );
@@ -528,7 +552,7 @@ const run = async () => {
           await sleep(100);
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new thwack.ThwackResponse(
+          return new ThwackResponse(
             { ok: true, status: 200, data: 'mock response' },
             options
           );
@@ -547,10 +571,7 @@ const run = async () => {
           // await sleep(100);
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new thwack.ThwackResponse(
-            { status: 409, data: 'boo!' },
-            options
-          );
+          return new ThwackResponse({ status: 409, data: 'boo!' }, options);
         };
         thwack.addEventListener('data', callback);
         try {
@@ -559,7 +580,7 @@ const run = async () => {
             foo: 'bar',
           });
         } catch (ex) {
-          expect(ex instanceof thwack.ThwackResponseError).toBe(true);
+          expect(ex instanceof ThwackResponseError).toBe(true);
           expect(ex.thwackResponse.data).toBe('boo!');
         } finally {
           thwack.removeEventListener('data', callback);
@@ -571,7 +592,7 @@ const run = async () => {
           // await sleep(100);
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new thwack.ThwackResponse({ status: 409 }, options);
+          return new ThwackResponse({ status: 409 }, options);
         };
         thwack.addEventListener('data', callback);
         try {
@@ -580,7 +601,7 @@ const run = async () => {
             foo: 'bar',
           });
         } catch (ex) {
-          expect(ex instanceof thwack.ThwackResponseError).toBe(true);
+          expect(ex instanceof ThwackResponseError).toBe(true);
         } finally {
           thwack.removeEventListener('data', callback);
         }
@@ -651,7 +672,7 @@ const run = async () => {
         const callback = (e) => {
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new thwack.ThwackResponse(
+          return new ThwackResponse(
             { status: 200, data: 'mock response' },
             options
           );
@@ -669,7 +690,7 @@ const run = async () => {
         const callback = (e) => {
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new thwack.ThwackResponse({ data: 'mock response' }, options);
+          return new ThwackResponse({ data: 'mock response' }, options);
         };
         thwack.addEventListener('error', callback);
         const resp = await thwack('http://foo.com', {
@@ -685,7 +706,7 @@ const run = async () => {
           await sleep(100);
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new thwack.ThwackResponse(
+          return new ThwackResponse(
             { ok: true, status: 200, data: 'mock response' },
             options
           );
@@ -704,10 +725,7 @@ const run = async () => {
           // await sleep(100);
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new thwack.ThwackResponse(
-            { status: 409, data: 'boo!' },
-            options
-          );
+          return new ThwackResponse({ status: 409, data: 'boo!' }, options);
         };
         thwack.addEventListener('error', callback);
         try {
@@ -716,7 +734,7 @@ const run = async () => {
             foo: 'bar',
           });
         } catch (ex) {
-          expect(ex instanceof thwack.ThwackResponseError).toBe(true);
+          expect(ex instanceof ThwackResponseError).toBe(true);
           expect(ex.thwackResponse.status).toBe(409);
           expect(ex.thwackResponse.data).toBe('boo!');
         } finally {
@@ -729,7 +747,7 @@ const run = async () => {
           // await sleep(100);
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new thwack.ThwackResponse({ status: 409 }, options);
+          return new ThwackResponse({ status: 409 }, options);
         };
         thwack.addEventListener('error', callback);
         try {
@@ -738,7 +756,7 @@ const run = async () => {
             foo: 'bar',
           });
         } catch (ex) {
-          expect(ex instanceof thwack.ThwackResponseError).toBe(true);
+          expect(ex instanceof ThwackResponseError).toBe(true);
         } finally {
           thwack.removeEventListener('error', callback);
         }
