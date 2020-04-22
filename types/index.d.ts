@@ -28,16 +28,15 @@ export type Method =
   | 'patch'
   | 'PATCH';
 
-export interface ThwackOptions {
+export interface ThwackOptions extends RequestInit {
   method?: Method; // One of the supported HTTP request methods.
   url?: string; // A string containing a URL with optional `:name` params.
-  fetch?: (url: string, options?: any) => Promise<Response>; // A function that implements `window.fetch`. Default = `window.fetch`.
+  baseURL?: string; // A string containing a base URL to build a FQ URL
+  fetch?: (url: string, options?: RequestInit) => Promise<Response>; // A function that implements `window.fetch`. Default = `window.fetch`.
   params?: KeyValue; // A key/value object used for search parameters.
   data?: any; // The data that you would like to send. Not valid for GET and HEAD methods.
-  headers?: KeyValue; // A key/value object used for HTTP headers.
   responseParserMap?: KeyValue;
   responseType?: ResponseType;
-  signal?: AbortSignal;
 }
 
 export interface ThwackResponse<T = any> {
@@ -47,6 +46,20 @@ export interface ThwackResponse<T = any> {
   data: T;
   response: Response;
   options: ThwackOptions;
+}
+
+interface ThwackSyntheticResponse<T = any> {
+  status: number;
+  statusText?: string;
+  data?: T;
+  headers?: KeyValue | Headers;
+}
+
+interface ThwackResponseConstructor {
+  new (
+    response: Response | ThwackSyntheticResponse,
+    options: ThwackOptions
+  ): ThwackResponse;
 }
 
 export interface ThwackResponseError extends Error {
@@ -97,34 +110,41 @@ export interface ThwackInstance {
   create(config?: ThwackOptions): ThwackInstance;
   getUri(config?: ThwackOptions): string;
 
+  defaults: ThwackOptions;
+
+  ThwackResponse: ThwackResponseConstructor;
+  ThwackResponseError: ThwackResponseError;
+
   addEventListener(
     type: 'request',
     callback: (event: ThwackRequestEvent) => ThwackRequestCallbackType
   ): void;
+  removeEventListener(
+    type: 'request',
+    callback: (event: ThwackRequestEvent) => ThwackRequestCallbackType
+  ): void;
+
   addEventListener(
     type: 'response',
     callback: (event: ThwackResponseEvent) => ThwackCallbackType
   ): void;
+  removeEventListener(
+    type: 'response',
+    callback: (event: ThwackResponseEvent) => ThwackCallbackType
+  ): void;
+
   addEventListener(
     type: 'data',
     callback: (event: ThwackDataEvent) => ThwackCallbackType
   ): void;
+  removeEventListener(
+    type: 'data',
+    callback: (event: ThwackDataEvent) => ThwackCallbackType
+  ): void;
+
   addEventListener(
     type: 'error',
     callback: (event: ThwackErrorEvent) => ThwackCallbackType
-  ): void;
-
-  removeEventListener(
-    type: 'request',
-    callback: (event: ThwackRequestEvent) => ThwackRequestCallbackType
-  ): void;
-  removeEventListener(
-    type: 'response',
-    callback: (event: ThwackResponseEvent) => ThwackCallbackType
-  ): void;
-  removeEventListener(
-    type: 'data',
-    callback: (event: ThwackDataEvent) => ThwackCallbackType
   ): void;
   removeEventListener(
     type: 'error',
