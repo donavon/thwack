@@ -233,6 +233,15 @@ const run = async () => {
           done(null, ex);
         }
       });
+      it('throws a ThwackResponseError with error.data', async (done) => {
+        const fetch = createMockFetch({ status: 400, textResult: 'footext' });
+        try {
+          await thwack('http://foo.com/', { fetch });
+        } catch (ex) {
+          expect(ex.thwackResponse.data).toEqual(fooBarData);
+          done(null, ex);
+        }
+      });
       it('throws a ThwackResponseError with error.statusText', async (done) => {
         const fetch = createMockFetch({ status: 403, textResult: 'footext' });
         try {

@@ -32,13 +32,11 @@ const returnResponse = async function (thwackResponse) {
   if (!(thwackResponse instanceof ThwackResponse)) {
     throw new Error('Thwack: callback must return a ThwackResponse');
   }
-  const { ok, response } = thwackResponse;
+  // eslint-disable-next-line no-param-reassign
+  thwackResponse.data = await fetchResponseData(thwackResponse);
 
   // was it a the 2xx response?
-  if (ok) {
-    // eslint-disable-next-line no-param-reassign
-    thwackResponse.data = await fetchResponseData(thwackResponse);
-
+  if (thwackResponse.ok) {
     // dispatch a "data" event here
     const dataEvent = new ThwackDataEvent(thwackResponse);
     const payload = await this.dispatchEvent(dataEvent);
@@ -49,12 +47,7 @@ const returnResponse = async function (thwackResponse) {
     return payload;
   }
 
-  // if NOT ok then throw with text of body as the message
-  if (response.body) {
-    // eslint-disable-next-line no-param-reassign
-    thwackResponse.data = await response.text();
-  }
-  // dispatch an "error" event here
+  // if NOT ok then throw, but first dispatch an "error" event
   const errorEvent = new ThwackErrorEvent(thwackResponse);
   const payload = await this.dispatchEvent(errorEvent);
   const { defaultPrevented } = errorEvent;
