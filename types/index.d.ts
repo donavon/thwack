@@ -37,6 +37,7 @@ export interface ThwackOptions {
   headers?: KeyValue; // A key/value object used for HTTP headers.
   responseParserMap?: KeyValue;
   responseType?: ResponseType;
+  signal?: AbortSignal;
 }
 
 export interface ThwackResponse<T = any> {
@@ -48,25 +49,26 @@ export interface ThwackResponse<T = any> {
   options: ThwackOptions;
 }
 
-export interface ThwackError extends Error {
-  status: number;
-  statusText: string;
-  headers: KeyValue;
-  data: any;
-  response: Response;
+export interface ThwackResponseError extends Error {
+  thwackResponse: ThwackResponse;
 }
 
-export interface ThwackRequestEvent extends Event {
+export interface ThwackEvent extends Event {}
+export interface ThwackResponseBaseEvent extends ThwackEvent {
+  thwackResponse: ThwackResponse;
+}
+export interface ThwackRequestEvent extends ThwackEvent {
+  type: 'request';
   options: ThwackOptions;
 }
-export interface ThwackResponseEvent extends Event {
-  thwackResponse: ThwackResponse;
+export interface ThwackResponseEvent extends ThwackResponseBaseEvent {
+  type: 'response';
 }
-export interface ThwackDataEvent extends Event {
-  thwackResponse: ThwackResponse;
+export interface ThwackDataEvent extends ThwackResponseBaseEvent {
+  type: 'data';
 }
-export interface ThwackErrorEvent extends Event {
-  thwackResponse: ThwackResponse;
+export interface ThwackErrorEvent extends ThwackResponseBaseEvent {
+  type: 'error';
 }
 
 export type ThwackCallbackType =
