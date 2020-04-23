@@ -61,6 +61,8 @@ Thwack doesn't try to solve every problem, like Axios does, but instead provides
 Methods
 </h2>
 
+The following methods are available on all Thwack instances.
+
 ### Data fetching
 
 - `thwack(url: string [,options: ThwackOptions]): Promise<ThwackResponse>;`
@@ -95,6 +97,19 @@ For more information on Thwack's event system, see [Thwack events](#thwack-event
 - `thwack.addEventListener(type: string, callback: (event:ThwackEvent) => Promise<any> ): void;`
 
 - `thwack.removeEventListener(type: string, callback: (event:ThwackEvent) => Promise<any> ): void;`
+
+<h2>
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
+Static Methods
+</h2>
+
+### Concurrency
+
+Thwack has the following helper functions for making simultaneous requests. They are mostly for Axios compatibility. See the "[How To](#how-to)" section below for example usage.
+
+- `thwack.all(Promise<ThwackResponse>[])`
+
+- `thwack.spread(callback<results>)`
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
@@ -405,6 +420,51 @@ import thwack from 'thwack/node10'; // NodeJS version 10
 How to
 </h2>
 
+### Multiple concurrent requests
+
+You can use `thwack.all()` and `thwack.spread()` to make simultaneous requests. Data is then presented to your callback as one array.
+
+Here we display information for two GitHub users.
+
+```js
+function displayGitHubUsers() {
+  return thwack
+    .all([
+      thwack.get('https://api.github.com/users/donavon'),
+      thwack.get('https://api.github.com/users/revelcw'),
+    ])
+    .then(
+      thwack.spread((...results) => {
+        const output = results
+          .map(
+            ({ data }) => `${data.login} has ${data.public_repos} public repos`
+          )
+          .join('\n');
+        console.log(output);
+      })
+    );
+}
+```
+
+Note the these are simply helper functions. If you are using `async`/`await` you can write this without the Thwack helpers using `Promise.all`.
+
+```js
+async function displayGitHubUsers() {
+  const results = await Promise.all([
+    thwack.get('https://api.github.com/users/donavon'),
+    thwack.get('https://api.github.com/users/revelcw'),
+  ]);
+  const output = results
+    .map(({ data }) => `${data.login} has ${data.public_repos} public repos`)
+    .join('\n');
+  console.log(output);
+}
+```
+
+You can see this running live in the [CodeSandbox](https://codesandbox.io/s/thwack-allspread-demo-zx2nt?file=/src/index.js:140-642).
+
+(Demo inspired by [this blob post](https://blog.logrocket.com/how-to-make-http-requests-like-a-pro-with-axios/) on axios/fetch)
+
 ### Cancelling a request
 
 Use an `AbortController` to cancel requests by passing its `signal` in the `thwack` options:
@@ -610,6 +670,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
