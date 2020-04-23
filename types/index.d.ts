@@ -112,9 +112,6 @@ export interface ThwackInstance {
 
   defaults: ThwackOptions;
 
-  ThwackResponse: ThwackResponseConstructor;
-  ThwackResponseError: ThwackResponseError;
-
   addEventListener(
     type: 'request',
     callback: (event: ThwackRequestEvent) => ThwackRequestCallbackType
@@ -152,6 +149,11 @@ export interface ThwackInstance {
   ): void;
 }
 
-declare const thwack: ThwackInstance;
+export interface ThwackMainInstance extends ThwackInstance {
+  ThwackResponse: ThwackResponseConstructor;
+  ThwackResponseError: ThwackResponseError;
+}
+
+declare const thwack: ThwackMainInstance;
 
 export default thwack;
