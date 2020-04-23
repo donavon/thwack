@@ -394,6 +394,57 @@ const run = async () => {
       it('is exported as an instance of Error', () => {
         expect(new thwack.ThwackResponseError({}) instanceof Error).toBe(true);
       });
+      it('is exported on the main instance only', () => {
+        const fetch = createMockFetch();
+        const instance = thwack.create({ fetch });
+        expect(instance.ThwackResponseError).toBe(undefined);
+      });
+    });
+  });
+
+  describe('thwack.ThwackResponse', () => {
+    it('is exported as an instance of ThwackResponse', () => {
+      expect(new thwack.ThwackResponse({}) instanceof ThwackResponse).toBe(
+        true
+      );
+    });
+    it('is exported on the main instance only', () => {
+      const fetch = createMockFetch();
+      const instance = thwack.create({ fetch });
+      expect(instance.ThwackResponse).toBe(undefined);
+    });
+  });
+
+  describe('thwack.all', () => {
+    it('resolves to an array of results', async () => {
+      const results = await thwack.all([
+        Promise.resolve('foo'),
+        Promise.resolve('bar'),
+      ]);
+      expect(results).toEqual(['foo', 'bar']);
+    });
+    it('is exported on the main instance only', () => {
+      const fetch = createMockFetch();
+      const instance = thwack.create({ fetch });
+      expect(instance.all).toBe(undefined);
+    });
+  });
+
+  describe('thwack.spread', () => {
+    it('takes a callback returns a function', () => {
+      expect(typeof thwack.spread()).toBe('function');
+    });
+    it('calling that function with an array will spread the array to the callback', (done) => {
+      const callback = (...results) => {
+        expect(results).toEqual([1, 2, 3]);
+        done();
+      };
+      thwack.spread(callback)([1, 2, 3]);
+    });
+    it('is exported on the main instance only', () => {
+      const fetch = createMockFetch();
+      const instance = thwack.create({ fetch });
+      expect(instance.spread).toBe(undefined);
     });
   });
 };
