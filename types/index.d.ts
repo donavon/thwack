@@ -152,6 +152,8 @@ export interface ThwackInstance {
 export interface ThwackMainInstance extends ThwackInstance {
   ThwackResponse: ThwackResponseConstructor;
   ThwackResponseError: ThwackResponseError;
+  all<T>(values: (T | Promise<T>)[]): Promise<T[]>;
+  spread<T, R>(callback: (...args: T[]) => R): (array: T[]) => R;
 }
 
 declare const thwack: ThwackMainInstance;
