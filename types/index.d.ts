@@ -99,13 +99,34 @@ export type ThwackRequestCallbackType =
 export interface ThwackInstance {
   (url: string, options?: ThwackOptions): Promise<ThwackResponse>;
 
-  request(config: ThwackOptions): Promise<ThwackResponse>;
-  get(url: string, config?: ThwackOptions): Promise<any>;
-  delete(url: string, config?: ThwackOptions): Promise<any>;
-  head(url: string, config?: ThwackOptions): Promise<any>;
-  post(url: string, data?: any, config?: ThwackOptions): Promise<any>;
-  put(url: string, data?: any, config?: ThwackOptions): Promise<any>;
-  patch(url: string, data?: any, config?: ThwackOptions): Promise<any>;
+  request<T = any, R = ThwackResponse<T>>(config: ThwackOptions): Promise<R>;
+  get<T = any, R = ThwackResponse<T>>(
+    url: string,
+    config?: ThwackOptions
+  ): Promise<R>;
+  delete<T = any, R = ThwackResponse<T>>(
+    url: string,
+    config?: ThwackOptions
+  ): Promise<R>;
+  head<T = any, R = ThwackResponse<T>>(
+    url: string,
+    config?: ThwackOptions
+  ): Promise<R>;
+  post<T = any, R = ThwackResponse<T>>(
+    url: string,
+    data?: any,
+    config?: ThwackOptions
+  ): Promise<R>;
+  put<T = any, R = ThwackResponse<T>>(
+    url: string,
+    data?: any,
+    config?: ThwackOptions
+  ): Promise<R>;
+  patch<T = any, R = ThwackResponse<T>>(
+    url: string,
+    data?: any,
+    config?: ThwackOptions
+  ): Promise<R>;
 
   create(config?: ThwackOptions): ThwackInstance;
   getUri(config?: ThwackOptions): string;
