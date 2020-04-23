@@ -1,7 +1,5 @@
 import request from './request';
 import combineOptions from './utils/combineOptions';
-import ThwackResponseError from './ThwackErrors/ThwackResponseError';
-import ThwackResponse from './ThwackResponse';
 import buildUrl from './utils/buildUrl';
 import resolveOptionsFromArgs from './utils/resolveOptionsFromArgs';
 
@@ -16,8 +14,6 @@ export default class Thwack {
 
     instance._parent = parent;
     instance.defaults = defaults;
-    instance.ThwackResponseError = ThwackResponseError;
-    instance.ThwackResponse = ThwackResponse;
 
     instance._depth = 0; // number of concurrent requests (errors at options.maxDepth)
     instance._listeners = {
