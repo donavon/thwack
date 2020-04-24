@@ -407,9 +407,27 @@ How to
 
 ### Cancelling a request
 
-Use an `AbortController` to cancel requests by passing its `signal` in the `thwack` options:
+Use an `AbortController` to cancel requests by passing its `signal` in the `thwack` options. 
+
+In the browser, you can use the built in [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController):
 
 ```js
+import thwack from 'thwack';
+
+const controller = new AbortController();
+const { signal } = controller;
+
+thwack(url, { signal }).then(handleResponse).catch(handleError);
+
+controller.abort();
+```
+
+In node, you can use something like the [abort-controller](https://www.npmjs.com/package/abort-controller) package:
+
+```js
+import thwack from 'thwack';
+import AbortController from "abort-controller"
+
 const controller = new AbortController();
 const { signal } = controller;
 
