@@ -422,7 +422,7 @@ thwack(url, { signal }).then(handleResponse).catch(handleError);
 controller.abort();
 ```
 
-In node, you can use something like the [abort-controller](https://www.npmjs.com/package/abort-controller) package:
+In NodeJS, you can use something like [abort-controller](https://www.npmjs.com/package/abort-controller).
 
 ```js
 import thwack from 'thwack';
