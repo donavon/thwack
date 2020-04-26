@@ -409,7 +409,7 @@ How to
 
 Use an `AbortController` to cancel requests by passing its `signal` in the `thwack` options. 
 
-In the browser, you can use the built in [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController):
+In the browser, you can use the built-in [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController).
 
 ```js
 import thwack from 'thwack';
