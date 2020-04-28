@@ -1,8 +1,8 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* istanbul ignore file */
 /* eslint-disable no-undef */
-import { defaultOptions } from '../src/defaults';
-import deepSpreadOptions from '../src/utils/deepSpreadOptions';
+import { defaultOptions } from '../src/core/defaults';
+import deepSpreadOptions from '../src/core/utils/deepSpreadOptions';
 import 'core-js/features/array/flat';
 import 'core-js/features/object/from-entries';
 

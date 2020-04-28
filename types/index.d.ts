@@ -39,20 +39,20 @@ export interface ThwackOptions extends RequestInit {
   responseType?: ResponseType;
 }
 
-export interface ThwackResponse<T = any> {
-  status: number;
-  statusText: string;
-  headers: KeyValue;
-  data: T;
-  response: Response;
-  options: ThwackOptions;
-}
-
 interface ThwackSyntheticResponse<T = any> {
   status: number;
   statusText?: string;
   data?: T;
   headers?: KeyValue | Headers;
+}
+
+export interface ThwackResponse<T = any> {
+  status: number;
+  statusText: string;
+  headers: KeyValue;
+  data: T;
+  response: Response | ThwackSyntheticResponse;
+  options: ThwackOptions;
 }
 
 interface ThwackResponseConstructor {

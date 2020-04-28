@@ -1,4 +1,4 @@
-import computeContentType from '../src/utils/computeContentType';
+import computeContentType from '../src/core/utils/computeContentType';
 
 describe('computeContentType', () => {
   it('if passed a Blob, returns the type', () => {

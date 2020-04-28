@@ -1,5 +1,5 @@
-import computeParser from '../src/utils/computeParser';
-import { defaultParserMap } from '../src/defaults';
+import computeParser from '../src/core/utils/computeParser';
+import { defaultParserMap } from '../src/core/defaults';
 
 const testMap = {
   'foo/bar': 'foobar',

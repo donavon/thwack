@@ -1,4 +1,4 @@
-import sortByEntry from '../src/utils/sortByEntry';
+import sortByEntry from '../src/core/utils/buildUrl/sortByEntry';
 
 describe('sortByEntry', () => {
   it('returns a -1 if the key from A < the key from B', () => {

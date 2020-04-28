@@ -31,7 +31,7 @@ const fetcher = async function (options) {
       ? JSON.stringify(data)
       : data;
 
-  const fetchUrl = buildUrl(url, baseURL, params);
+  const fetchUrl = buildUrl({ ...options, url, baseURL });
 
   const fetchOptions = {
     ...(Object.keys(headers).length !== 0 && { headers }), // add if not empty object

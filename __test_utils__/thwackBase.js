@@ -1,11 +1,6 @@
-import thwack from '../src';
-import ThwackResponse from '../src/ThwackResponse';
-import {
-  createMockFetch,
-  fooBarData,
-  defaultFetchOptions,
-  defaultHeaders,
-} from './jestUtils';
+import thwack from '../src/core';
+import ThwackResponse from '../src/core/ThwackResponse';
+import { createMockFetch, fooBarData, defaultHeaders } from './jestUtils';
 
 const run = async () => {
   describe('Thwack base', () => {
@@ -32,15 +27,21 @@ const run = async () => {
         foo: 'bar',
       };
       const data = await thwack(options);
-      expect(fetch).toBeCalledWith('http://foo.com/', defaultFetchOptions);
+      expect(fetch).toBeCalledWith(
+        'http://foo.com/',
+        expect.objectContaining({ foo: 'bar' })
+      );
       expect(data instanceof ThwackResponse).toBe(true);
     });
     it('can be passed a fully qualified URL', async () => {
       const fetch = createMockFetch();
       await thwack('http://donavon.com/', { fetch });
-      expect(fetch).toBeCalledWith('http://donavon.com/', {
-        headers: defaultHeaders,
-      });
+      expect(fetch).toBeCalledWith(
+        'http://donavon.com/',
+        expect.objectContaining({
+          headers: defaultHeaders,
+        })
+      );
     });
     it('can be passed a URL with params in the URL (ex: "/order/:id")', async () => {
       const fetch = createMockFetch();
@@ -48,16 +49,22 @@ const run = async () => {
         fetch,
         params: { id: 123 },
       });
-      expect(fetch).toBeCalledWith('http://donavon.com/foo/123', {
-        headers: defaultHeaders,
-      });
+      expect(fetch).toBeCalledWith(
+        'http://donavon.com/foo/123',
+        expect.objectContaining({
+          headers: defaultHeaders,
+        })
+      );
     });
     it('can be passed a URL with params which build them as a search query', async () => {
       const fetch = createMockFetch();
       await thwack('http://donavon.com/foo', { fetch, params: { id: 123 } });
-      expect(fetch).toBeCalledWith('http://donavon.com/foo?id=123', {
-        headers: defaultHeaders,
-      });
+      expect(fetch).toBeCalledWith(
+        'http://donavon.com/foo?id=123',
+        expect.objectContaining({
+          headers: defaultHeaders,
+        })
+      );
     });
     it('can be passed a URL with an existing search query (ex: "/order?a=456")', async () => {
       const fetch = createMockFetch();
@@ -65,9 +72,12 @@ const run = async () => {
         fetch,
         params: { id: 123 },
       });
-      expect(fetch).toBeCalledWith('http://donavon.com/foo?a=456&id=123', {
-        headers: defaultHeaders,
-      });
+      expect(fetch).toBeCalledWith(
+        'http://donavon.com/foo?a=456&id=123',
+        expect.objectContaining({
+          headers: defaultHeaders,
+        })
+      );
     });
     it('sorts param keys when building search query', async () => {
       const fetch = createMockFetch();
@@ -77,9 +87,9 @@ const run = async () => {
       });
       expect(fetch).toBeCalledWith(
         'http://donavon.com/foo?foo=foo&a=a&b=b&c=c',
-        {
+        expect.objectContaining({
           headers: defaultHeaders,
-        }
+        })
       );
     });
     it('defaults to POST is data is present and method not specified', async () => {
@@ -89,17 +99,23 @@ const run = async () => {
         fetch,
         data: fooBarData,
       });
-      expect(fetch).toBeCalledWith('http://foo.com/', {
-        headers: { 'content-type': 'application/json', ...defaultHeaders },
-        body: JSON.stringify(fooBarData),
-        method: 'foo',
-      });
+      expect(fetch).toBeCalledWith(
+        'http://foo.com/',
+        expect.objectContaining({
+          headers: { 'content-type': 'application/json', ...defaultHeaders },
+          body: JSON.stringify(fooBarData),
+          method: 'foo',
+        })
+      );
       await thwack('http://foo.com/', { fetch, data: fooBarData });
-      expect(fetch).toBeCalledWith('http://foo.com/', {
-        headers: { 'content-type': 'application/json', ...defaultHeaders },
-        body: JSON.stringify(fooBarData),
-        method: 'post',
-      });
+      expect(fetch).toBeCalledWith(
+        'http://foo.com/',
+        expect.objectContaining({
+          headers: { 'content-type': 'application/json', ...defaultHeaders },
+          body: JSON.stringify(fooBarData),
+          method: 'post',
+        })
+      );
     });
     it('encode only if content-type is application/json', async () => {
       const fetch = createMockFetch();
@@ -108,21 +124,27 @@ const run = async () => {
         headers: { 'content-type': 'text/plain' },
         data: 'this is plain text',
       });
-      expect(fetch).toBeCalledWith('http://foo.com/', {
-        headers: { 'content-type': 'text/plain', ...defaultHeaders },
-        body: 'this is plain text',
-        method: 'post',
-      });
+      expect(fetch).toBeCalledWith(
+        'http://foo.com/',
+        expect.objectContaining({
+          headers: { 'content-type': 'text/plain', ...defaultHeaders },
+          body: 'this is plain text',
+          method: 'post',
+        })
+      );
       await thwack('http://foo.com/', {
         fetch,
         headers: { 'content-type': 'application/json' },
         data: fooBarData,
       });
-      expect(fetch).toBeCalledWith('http://foo.com/', {
-        headers: { 'content-type': 'application/json', ...defaultHeaders },
-        body: JSON.stringify(fooBarData),
-        method: 'post',
-      });
+      expect(fetch).toBeCalledWith(
+        'http://foo.com/',
+        expect.objectContaining({
+          headers: { 'content-type': 'application/json', ...defaultHeaders },
+          body: JSON.stringify(fooBarData),
+          method: 'post',
+        })
+      );
     });
 
     it('does not override method (if specified) when data present', async () => {
@@ -133,11 +155,14 @@ const run = async () => {
         data: 'this is plain text',
         method: 'FOO',
       });
-      expect(fetch).toBeCalledWith('http://foo.com/', {
-        headers: { 'content-type': 'text/plain', ...defaultHeaders },
-        body: 'this is plain text',
-        method: 'FOO',
-      });
+      expect(fetch).toBeCalledWith(
+        'http://foo.com/',
+        expect.objectContaining({
+          headers: { 'content-type': 'text/plain', ...defaultHeaders },
+          body: 'this is plain text',
+          method: 'FOO',
+        })
+      );
     });
 
     describe('when response does not specify a content-type', () => {
@@ -273,6 +298,30 @@ const run = async () => {
       });
     });
 
+    describe('when options.validateStatus is provided', () => {
+      it('when returns false throws on a 200 status', async (done) => {
+        const validateStatus = () => false;
+        const fetch = createMockFetch({ status: 200 });
+        try {
+          await thwack('http://foo.com/', { fetch, validateStatus });
+        } catch (ex) {
+          expect(ex instanceof thwack.ThwackResponseError).toBe(true);
+          done(null, ex);
+        }
+      });
+      it('when returns true does NOT throws on a 500 status', async () => {
+        const validateStatus = () => true;
+        const fetch = createMockFetch({
+          status: 500,
+        });
+        const { data } = await thwack('http://foo.com/', {
+          fetch,
+          validateStatus,
+        });
+        expect(data).toEqual(fooBarData);
+      });
+    });
+
     describe('thwack convenience functions', () => {
       // eslint-disable-next-line no-restricted-syntax
       for (const method of ['post', 'put', 'patch']) {
@@ -281,11 +330,17 @@ const run = async () => {
           const data = await thwack[method]('http://foo.com/', 'data', {
             fetch,
           });
-          expect(fetch).toBeCalledWith('http://foo.com/', {
-            headers: { 'content-type': 'application/json', ...defaultHeaders },
-            body: JSON.stringify('data'),
-            method,
-          });
+          expect(fetch).toBeCalledWith(
+            'http://foo.com/',
+            expect.objectContaining({
+              method,
+              headers: {
+                'content-type': 'application/json',
+                ...defaultHeaders,
+              },
+              body: JSON.stringify('data'),
+            })
+          );
           expect(data instanceof ThwackResponse).toBe(true);
         });
       }
@@ -295,10 +350,12 @@ const run = async () => {
         it(`thwack.${method}(name, options) defaults to ${method.toUpperCase()} and resolves with a ThwackResponse object`, async () => {
           const fetch = createMockFetch();
           const data = await thwack[method]('http://foo.com/', { fetch });
-          expect(fetch).toBeCalledWith('http://foo.com/', {
-            headers: defaultHeaders,
-            method,
-          });
+          expect(fetch).toBeCalledWith(
+            'http://foo.com/',
+            expect.objectContaining({
+              method,
+            })
+          );
           expect(data instanceof ThwackResponse).toBe(true);
         });
       }
@@ -311,7 +368,12 @@ const run = async () => {
           foo: 'bar',
         };
         const data = await thwack.request(options);
-        expect(fetch).toBeCalledWith('http://foo.com/', defaultFetchOptions);
+        expect(fetch).toBeCalledWith(
+          'http://foo.com/',
+          expect.objectContaining({
+            foo: 'bar',
+          })
+        );
         expect(data instanceof ThwackResponse).toBe(true);
       });
     });
@@ -328,7 +390,12 @@ const run = async () => {
           foo: 'bar',
         };
         await instance1(options);
-        expect(fetch).toBeCalledWith('http://one.com/foo', defaultFetchOptions);
+        expect(fetch).toBeCalledWith(
+          'http://one.com/foo',
+          expect.objectContaining({
+            foo: 'bar',
+          })
+        );
       });
 
       it('will be unique per instance', async () => {
@@ -339,7 +406,12 @@ const run = async () => {
           foo: 'bar',
         };
         await instance2(options);
-        expect(fetch).toBeCalledWith('http://two.com/foo', defaultFetchOptions);
+        expect(fetch).toBeCalledWith(
+          'http://two.com/foo',
+          expect.objectContaining({
+            foo: 'bar',
+          })
+        );
       });
 
       it('will not effect the base thwack instance', async () => {
@@ -350,7 +422,12 @@ const run = async () => {
           foo: 'bar',
         };
         await thwack(options);
-        expect(fetch).toBeCalledWith('http://foo.com/', defaultFetchOptions);
+        expect(fetch).toBeCalledWith(
+          'http://foo.com/',
+          expect.objectContaining({
+            foo: 'bar',
+          })
+        );
       });
     });
 
@@ -388,6 +465,16 @@ const run = async () => {
         });
         expect(eventUrl).toBe('https://example.com/api/foo/123');
       });
+
+      // not needed with buildUrl tests
+      it.skip('will respect options.buildURL', () => {
+        const options = { url: 'foo', baseURL: 'bar' };
+        const callback = jest.fn((o) => o);
+        const instance = thwack.create({ buildURL: callback });
+        const res = instance.getUri(options);
+        expect(callback).toBeCalledWith(expect.objectContaining(options));
+        expect(res).toEqual(expect.objectContaining(options));
+      });
     });
 
     describe('thwack.ThwackResponseError', () => {
@@ -404,9 +491,30 @@ const run = async () => {
 
   describe('thwack.ThwackResponse', () => {
     it('is exported as an instance of ThwackResponse', () => {
-      expect(new thwack.ThwackResponse({}) instanceof ThwackResponse).toBe(
+      expect(new thwack.ThwackResponse({}, {}) instanceof ThwackResponse).toBe(
         true
       );
+    });
+    it('use status to determine ok (defaults to 2xx)', () => {
+      expect(new thwack.ThwackResponse({ status: 199 }, {}).ok).toBe(false);
+      expect(new thwack.ThwackResponse({ status: 200 }, {}).ok).toBe(true);
+      expect(new thwack.ThwackResponse({ status: 299 }, {}).ok).toBe(true);
+      expect(new thwack.ThwackResponse({ status: 300 }, {}).ok).toBe(false);
+    });
+    it('is not effected by options.validateStatus', () => {
+      const validateStatus = (s) => s >= 400 && s < 500;
+      expect(
+        new thwack.ThwackResponse({ status: 199 }, { validateStatus }).ok
+      ).toBe(false);
+      expect(
+        new thwack.ThwackResponse({ status: 200 }, { validateStatus }).ok
+      ).toBe(true);
+      expect(
+        new thwack.ThwackResponse({ status: 299 }, { validateStatus }).ok
+      ).toBe(true);
+      expect(
+        new thwack.ThwackResponse({ status: 300 }, { validateStatus }).ok
+      ).toBe(false);
     });
     it('is exported on the main instance only', () => {
       const fetch = createMockFetch();

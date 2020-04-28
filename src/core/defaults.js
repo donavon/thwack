@@ -7,17 +7,8 @@ export const defaultOptions = {
   headers: {
     accept: `${APPLICATION_JSON}, text/plain, */*`,
   },
+  buildURL: 'complete',
 };
-
-if (typeof window !== 'undefined') {
-  const {
-    fetch,
-    location: { origin, pathname },
-  } = window;
-
-  defaultOptions.fetch = fetch;
-  defaultOptions.baseURL = `${origin}${pathname}`;
-}
 
 export const defaultParserMap = {
   [APPLICATION_JSON]: 'json',

@@ -1,8 +1,8 @@
-import thwack from '../src';
-import ThwackResponseEvent from '../src/ThwackEvents/ThwackResponseEvent';
-import ThwackRequestEvent from '../src/ThwackEvents/ThwackRequestEvent';
-import ThwackDataEvent from '../src/ThwackEvents/ThwackDataEvent';
-import ThwackErrorEvent from '../src/ThwackEvents/ThwackErrorEvent';
+import thwack from '../src/core';
+import ThwackResponseEvent from '../src/core/ThwackEvents/ThwackResponseEvent';
+import ThwackRequestEvent from '../src/core/ThwackEvents/ThwackRequestEvent';
+import ThwackDataEvent from '../src/core/ThwackEvents/ThwackDataEvent';
+import ThwackErrorEvent from '../src/core/ThwackEvents/ThwackErrorEvent';
 
 import { createMockFetch } from './jestUtils';
 

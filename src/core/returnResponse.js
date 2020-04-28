@@ -1,4 +1,5 @@
 import { CONTENT_TYPE } from './defaults';
+import { defaultValidateStatus } from './utils/defaultValidateStatus';
 import computeParser from './utils/computeParser';
 import compatParser from './utils/compatParser';
 import ThwackResponse from './ThwackResponse';
@@ -9,21 +10,26 @@ import ThwackResponseError from './ThwackErrors/ThwackResponseError';
 async function fetchResponseData(thwackResponse) {
   const { response, options } = thwackResponse;
 
-  // if body is not present then response is "synthetic" (i.e. created from
-  // a mock source) so don't stream and parse the body. instead, use the
-  // synthetic thwackResponse.data field
-  if (response.body) {
-    const { responseType, responseParserMap } = options;
-    const contentTypeHeader = thwackResponse.headers[CONTENT_TYPE];
-    const responseParserType =
-      responseType || computeParser(contentTypeHeader, responseParserMap);
-    const compatResponseParserType = compatParser(responseParserType);
-    const responseData =
-      compatResponseParserType === 'stream'
-        ? response.body
-        : await response[compatResponseParserType]();
-    return responseData;
+  // if `response` is NOT a instance of `Response` then it is "synthetic"
+  // (i.e. created from a mock source) so don't stream and parse the body.
+  // Instead, return the synthetic `thwackResponse.data` field.
+  // Note: React Native does NOT expose `body` so stream is unsupported
+  // see https://github.com/facebook/react-native/issues/27741
+  const { responseType, responseParserMap } = options;
+  const contentTypeHeader = thwackResponse.headers[CONTENT_TYPE];
+  const responseParserType =
+    responseType || computeParser(contentTypeHeader, responseParserMap);
+  const compatResponseParserType = compatParser(responseParserType); // axios > thwack mapping
+
+  if (compatResponseParserType === 'stream') {
+    return response.body;
   }
+
+  if (response[compatResponseParserType]) {
+    return response[compatResponseParserType]();
+  }
+
+  // Return the synthetic data
   return thwackResponse.data;
 }
 
@@ -35,8 +41,10 @@ const returnResponse = async function (thwackResponse) {
   // eslint-disable-next-line no-param-reassign
   thwackResponse.data = await fetchResponseData(thwackResponse);
 
-  // was it a the 2xx response?
-  if (thwackResponse.ok) {
+  const { validateStatus = defaultValidateStatus } = thwackResponse.options;
+
+  // should we
+  if (validateStatus(thwackResponse.status)) {
     // dispatch a "data" event here
     const dataEvent = new ThwackDataEvent(thwackResponse);
     const payload = await this.dispatchEvent(dataEvent);

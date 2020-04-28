@@ -1,7 +1,6 @@
 /**
  * @jest-environment node
  */
-
 import thwack from '../src';
 import { createMockFetch } from '../__test_utils__/jestUtils';
 import runBaseTests from '../__test_utils__/thwackBase';

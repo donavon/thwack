@@ -18,7 +18,8 @@
     "no-void": "off",
     "no-return-assign": "off",
     "no-throw-literal": "off",
-    "no-console": "error"
+    "no-console": "error",
+    "comma-style": "off"
   },
   "env": {
     "browser": true

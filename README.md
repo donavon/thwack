@@ -8,7 +8,7 @@ Thwack. A tiny modern data fetching solution
 
 [![npm version](https://badge.fury.io/js/thwack.svg)](https://badge.fury.io/js/thwack)
 [![Build Status](https://travis-ci.com/donavon/thwack.svg?branch=master)](https://travis-ci.com/donavon/thwack)
-[![All Contributors](https://img.shields.io/badge/all_contributors-7-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-11-orange.svg?style=flat-square)](#contributors-)
 [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=Check%20out%20Thwack%21%20A%20tiny%20modern%20data%20fetching%20solution.&url=https://github.com/donavon/thwack&via=donavon&hashtags=javascript)
 [![Github stars](https://img.shields.io/badge/%E2%AD%90%EF%B8%8F-it%20on%20GitHub-blue)](https://github.com/donavon/thwack/stargazers)
 
@@ -25,6 +25,7 @@ Thwack is:
 - 😘 Familiar — Thwack uses an Axios-like interface
 - 🅰️ Typed — Easier inclusion for TypeScript projects
 - ✨ Support for NodeJS 10 and 12
+- 📱 Support for React Native
 
 > This README is a work in progress. You can also ask me a question [on Twitter](https://twitter.com/donavon).
 
@@ -54,7 +55,9 @@ Thwack was built from the ground up with modern browsers in mind. Because of thi
 
 They support the same API, but there are some differences — mainly around `options` — but for the most part, they should be able to be used interchangeably for many applications.
 
-Thwack doesn't try to solve every problem, like Axios does, but instead provides the solution for 98% of what users _really_ need. This is what gives Thwack its feather-light footprint.
+~~Thwack doesn't try to solve every problem, like Axios does, but instead provides the solution for 98% of what users _really_ need. This is what gives Thwack its feather-light footprint.~~
+
+Scratch that. Thwack provides the same level of power as Axios with a much smaller footprint. And Thwack's promise based event system is easier to use.
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
@@ -87,6 +90,8 @@ The following methods are available on all Thwack instances.
   The `create` method creates (da!) a new child instance of the current Thwack instance with the given `options`.
 
 - `thwack.getUri(options: ThwackOptions): string;`
+
+  Thwacks URL resolution is [RFC-3986](https://tools.ietf.org/html/rfc3986#appendix-B) compliant. Axios's is not. It's powered by [`@thwack/resolve`](https://www.npmjs.com/package/@thwack/resolve).
 
 ### Event listeners
 
@@ -124,7 +129,7 @@ This is either a fully qualified or a relative URL.
 
 ### `baseURL`
 
-Defines a base URL that will be used to build a fully qualified URL from `url` above. Defaults to the `origin` + `pathname` of the current web page.
+Defines a base URL that will be used to build a fully qualified URL from `url` above. Must be an absolute URL or `undefined`. Defaults to the `origin` + `pathname` of the current web page if running in a browser or `undefined` on Node or React Native.
 
 For example, if you did this:
 
@@ -199,6 +204,16 @@ const instance = thwack.create({
 console.log(instance.defaults.baseURL);
 ```
 
+Also note that setting `defaults` on an instance (or even passing `options`) to an instance does NOT effect the parent. So for the following example, `thwack.defaults.baseURL` will still be "https://api1.example.net/".
+
+```js
+thwack.defaults.baseURL = 'https://api1.example.net/';
+const instance = thwack.create();
+instance.defaults.baseURL = 'https://example.com/api';
+
+console.log(thwack.defaults.baseURL);
+```
+
 ### `params`
 
 This is an optional object that contains the key/value pairs that will be used to build the fetch URL. Is there are any `:key` segments of the `baseURL` or the `url`, they will be replaced with the value of the matching key. For example, if you did this:
@@ -220,7 +235,7 @@ If you don't specify a `:name`, or there are more `param`s than there are `:name
 
 ### `maxDepth`
 
-The maximum level of recursive requests that can be made before Thwack throws an error. This is used to prevent a event callback from causing a recursive loop if it issues another `request` without proper guards in place. Default = 5.
+The maximum level of recursive requests that can be made in a callbck before Thwack throws an error. This is used to prevent an event callback from causing a recursive loop, This if it issues another `request` without proper safeguards in place. Default = 3.
 
 ### `responseType`
 
@@ -235,11 +250,13 @@ What is returned by Thwack is determined by the following table. The "fetch meth
 |                       |    `stream`    | passes back `response.body` as `data` without processing |
 |                       |     `blob`     |                    `response.blob()`                     |
 |                       | `arraybuffer`  |                 `response.arrayBuffer()`                 |
-|         `*.*`         |     `text`     |                    `response.text()`                     |
+|         `*/*`         |     `text`     |                    `response.text()`                     |
+
+> Note: `stream` is currently unsupported in React Native due to [#27741](https://github.com/facebook/react-native/issues/27741)
 
 ### `responseParserMap`
 
-Another useful way to determine which response parser to use is with `responseParserMap`. It allows you to set up a mapping between content types and parser types.
+Another useful way to determine which response parser to use is with `responseParserMap`. It allows you to set up a mapping between the resulting `content-type` from the response header and the parser type.
 
 Thwack uses the following map as the default, which allows `json` and `formdata` decoding. If there are no matches, the response parser defaults to `text`. You may specify a default by setting the special `*/*` key.
 
@@ -253,34 +270,47 @@ Thwack uses the following map as the default, which allows `json` and `formdata`
 
 Any value you specify in `responseParserMap` is merged into the default map. That is to say that you can override the defaults and/or add new values.
 
-Let's say, for example, you would like to download an image into a blob. You could create an instance of Thwack (using `thwack.create()`) and share it throughout your entire application. Here we set the `baseURL` to our API endpoint and a `responseParserMap` that will download images of any type as blobs, but will still allow `json` downloads (as this is the default for a `content-type: application/json`).
+Let's say, for example, you would like to download an image into a blob. You could set the `baseURL` to your API endpoint and a `responseParserMap` that will download images of any type as blobs, but will still allow `json` downloads (as this is the default for a `content-type: application/json`).
 
 ```js
-// api.js
 import thwack from 'thwack';
 
-export default thwack.create({
-  responseParserMap: { 'image/*': 'blob' },
-});
+thwack.defaults.responseParserMap = { 'image/*': 'blob' };
 ```
 
-Then `import` the `api.js` file to use these options in other parts of your application. Any URL that you download with an `image/*` content type (e.g. `image/jpeg`, `image/png`, etc) will be parsed with the `blob` parser.
+Any URL that you download with an `image/*` content type (e.g. `image/jpeg`, `image/png`, etc) will be parsed with the `blob` parser.
 
 ```js
-import api from './api';
-
 const getBlobUrl = async (url) => {
-  const blob = (await api.get(url)).data;
+  const blob = (await thwack.get(url)).data;
   const objectURL = URL.createObjectURL(blob);
   return objectURL;
 };
 ```
 
-See this example running on [CodeSandbox]().
+See this example running on [CodeSandbox](https://codesandbox.io/s/load-image-as-blob-410uq).
 
-> Note that this works for other things besides images.
+> Note that you can use this technique for other things other than images.
 
 As you can see, using `responseParserMap` is a great way to eliminate the need to set `responseType` for different Thwack calls.
+
+### `validateStatus`
+
+This optional function is used to determine what status codes Thwack uses to return a promise or throw. It is passed the response `status`. If this function returns truthy, the promise is resolved, else the promise is rejected.
+
+The default function throws for any status not in the 2xx (i.e. 200-299)
+
+### `paramsSerializer`
+
+This is an optional function which Thwack will call to serialize the `params`. For example, given an object `{a:1, b:2, foo: 'bar'}`, it should serialize to the string `a=1&b=2&foo=bar`.
+
+For most people, the [default serializer](https://github.com/donavon/thwack/blob/master/src/core/utils/buildUrl/defaultParamSerializer.js) should work just fine. This is mainly for edge case and Axios compatibility.
+
+> Note that the default serializer alphabetizes the parameters, which is a good practice to follow. If, however, this doesn't work for your situation, you can roll your own serializer.
+
+### `resolver`
+
+This is a function that you can provide to override the [default resolver](https://github.com/donavon/thwack-resolve) behavior. `resolver` takes two arguments: a `url` and a `baseURL` which must be undefined, or an absolute URL. There should be little reason for you to to replace the resolver, but this is your escape hatch in case you need to.
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
@@ -299,7 +329,7 @@ A `number` representing the 3 digit [HTTP status codes](https://en.wikipedia.org
 
 ### `ok`
 
-A `boolean` set to true is the `status` code in the 2xx range (i.e. a success). If the promise resolves successfully, this value will always be `true`. If the request has a status outside of the 2xx range Thwack will throw a `ThwackResponseError` and `ok` will be false.
+A `boolean` set to true is the `status` code in the 2xx range (i.e. a success). This value is not effected by `validateStatus`.
 
 ### `statusText`
 
@@ -317,11 +347,11 @@ If a `ThwackResponseError` was thrown, `data` will be the plain text representat
 
 ### `options`
 
-The complete `options` object that processed the request. This `options` will be fully merged with parent instances (if any) as well as with defaults.
+The complete `options` object that processed the request. This `options` will be fully merged with any parent instance(s), as well as with `defaults`.
 
 ### `response`
 
-The complete HTTP `Response` object as returned by `fetch`.
+The complete HTTP `Response` object as returned by `fetch` or the `response` from a synthetic event callback.
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
@@ -404,7 +434,7 @@ If you are using NodeJS version 10, you will also need a polyfill for `Array#fla
 You can either provide these polyfills yourself, or use one of the following convenience imports instead. If you are running NodeJS 11+, use:
 
 ```js
-import thwack from 'thwack/node'; // NodeJS version 11+
+import thwack from 'thwack/node'; // NodeJS version 12+
 ```
 
 If you are running on NodeJS 10, use:
@@ -413,7 +443,25 @@ If you are running on NodeJS 10, use:
 import thwack from 'thwack/node10'; // NodeJS version 10
 ```
 
+If you wish to provide these polyfills yourself, then to use Thwack, you must import from `thwack/core` and set `fetch` as the default for `fetch` as so.
+
+```js
+import thwack from 'thwack/code';
+thwack.defaults.fetch = global.fetch;
+```
+
+This should be done in your app startup code, usually `index.js`.
+
 > Note: The `responseType` of `blob` is not supported on NodeJS.
+
+<h2>
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
+React Native
+</h2>
+
+Thwack is compatible with React Native and needs no additional polyfills. See below for a sample app written in React Native.
+
+> Note: React Native does not support `stream` due to [#27741](https://github.com/facebook/react-native/issues/27741)
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
@@ -467,7 +515,7 @@ You can see this running live in the [CodeSandbox](https://codesandbox.io/s/thwa
 
 ### Cancelling a request
 
-Use an `AbortController` to cancel requests by passing its `signal` in the `thwack` options. 
+Use an `AbortController` to cancel requests by passing its `signal` in the `thwack` options.
 
 In the browser, you can use the built-in [AbortController](https://developer.mozilla.org/en-US/docs/Web/API/AbortController).
 
@@ -486,7 +534,7 @@ In NodeJS, you can use something like [abort-controller](https://www.npmjs.com/p
 
 ```js
 import thwack from 'thwack';
-import AbortController from "abort-controller"
+import AbortController from 'abort-controller';
 
 const controller = new AbortController();
 const { signal } = controller;
@@ -567,20 +615,23 @@ thwack.addEventListener('request', async (event) => {
     event.stopPropagation();
 
     // because we called `preventDefault` above, the caller's request
-    // will be resolved to this `ThwackResponse` (defaults to status of 200)
-    return new thwack.ThwackResponse({
-      data: {
-        name: 'Fake Username',
-        email: 'fakeuser@example.com',
+    // will be resolved to this `ThwackResponse` (defaults to status of 200 and ok)
+    return new thwack.ThwackResponse(
+      {
+        data: {
+          name: 'Fake Username',
+          email: 'fakeuser@example.com',
+        },
       },
-    });
+      options
+    );
   }
 });
 ```
 
 ### Convert DTO to Model
 
-Often it is desirable to convert a DTO (Data Transfer Object) into something easier to consume by the client. In this example below, we convert a complex DTO into `firstName`, `lastName`, `avatar`, and `email`. Other data elements that are returned from the API call are ignored.
+Often it is desirable to convert a DTO (Data Transfer Object) into something easier to consume by the client. In this example below, we convert a complex DTO into `firstName`, `lastName`, `avatar`, and `email`. Other data elements that are returned from the API call, but not needed by the applications, are ignored.
 
 You can see an example of DTO conversion, logging, and returning fake data in this sample app.
 
@@ -623,7 +674,7 @@ See this example on [CodeSandbox](https://codesandbox.io/s/thwack-demo-load-imag
 
 ### Selective routing
 
-Right now you have a REST endpoint at `https://api.example.com`. Suppose you've published a new REST endpoint o a different URL and would like to start slowly routing 2% of network traffic to these new servers.
+Right now you have a REST endpoint at `https://api.example.com`. Suppose you've published a new REST endpoint to a different URL and would like to start slowly routing 2% of network traffic to these new servers.
 
 > Note: normally this would be handled by your load balancer on the back-end. It's shown here for demonstration purposes only.
 
@@ -644,6 +695,14 @@ thwack.addEventListener('request', (event) => {
   event.options = { ...event.options, url: newUrl }; // replace `options`]
 });
 ```
+
+### React Native sample app
+
+Along with `use-thwack`, writing a data fetching app for React Native couldn't be easier.
+
+View the entire app [running on Expo](https://snack.expo.io/@donavon/random-dog).
+
+<img alt="good dog app" src="https://user-images.githubusercontent.com/887639/80429496-3dc77d80-88ba-11ea-84e2-ebe9a2d69cc8.png" height="800" width="380">
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
@@ -689,6 +748,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

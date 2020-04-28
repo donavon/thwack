@@ -1,4 +1,4 @@
-import deepSpreadOptions from '../src/utils/deepSpreadOptions';
+import deepSpreadOptions from '../src/core/utils/deepSpreadOptions';
 
 const cases = [
   [undefined, undefined, {}],

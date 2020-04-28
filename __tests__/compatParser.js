@@ -1,4 +1,4 @@
-import compatParser from '../src/utils/compatParser';
+import compatParser from '../src/core/utils/compatParser';
 
 describe('compatParser', () => {
   it('converts parser type "document" to "formData"', () => {

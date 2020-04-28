@@ -1,3 +1,5 @@
+import { defaultValidateStatus } from './utils/defaultValidateStatus';
+
 export default class ThwackResponse {
   constructor(response, options) {
     const {
@@ -8,7 +10,7 @@ export default class ThwackResponse {
     } = response;
     this.status = status;
     this.statusText = statusText;
-    this.ok = status >= 200 && status < 300;
+    this.ok = defaultValidateStatus(status);
     this.data = data;
     this.headers =
       typeof headers.entries === 'function' // TODO why can't I do `headers instanceof Headers`?

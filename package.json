@@ -4,12 +4,12 @@
     "access": "public",
     "tag": "latest"
   },
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "A tiny modern data fetching solution.",
   "main": "dist/thwack.js",
   "umd:main": "dist/thwack.umd.js",
   "module": "dist/thwack.m.js",
-  "source": "src/index.js",
+  "source": "src/default/index.js",
   "types": "types/index.d.ts",
   "license": "MIT",
   "repository": {
@@ -21,10 +21,18 @@
     "lint": "eslint src",
     "test": "jest --verbose --coverage --silent",
     "test:watch": "jest --watch --runInBand --silent",
-    "prebuild": "npm run lint && npm t && rimraf dist",
-    "build": "microbundle",
-    "dev": "microbundle watch"
+    "prebuild": "npm run lint && rimraf dist && npm t",
+    "build": "microbundle"
   },
+  "files": [
+    "dist",
+    "node.js",
+    "node10.js",
+    "README.md",
+    "LICENSE",
+    "package.json",
+    "types"
+  ],
   "keywords": [
     "utils",
     "lib",
@@ -34,10 +42,16 @@
     "xhr",
     "http",
     "ajax",
-    "promise"
+    "promise",
+    "nodejs",
+    "react-native"
   ],
+  "engines": {
+    "node": ">=10"
+  },
   "author": "Donavon West <github@donavon.com> (https://github.com/donavon)",
   "dependencies": {
+    "@thwack/resolve": "^1.0.0",
     "core-js": "^3.6.5",
     "node-fetch": "^2.6.0"
   },
@@ -46,19 +60,18 @@
     "@babel/preset-env": "^7.9.5",
     "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",
-    "babel-jest": "^25.3.0",
+    "babel-jest": "^25.4.0",
     "eslint": "^6.8.0",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",
     "eslint-plugin-jest": "^23.8.2",
-    "jest": "^25.3.0",
+    "jest": "^25.4.0",
     "microbundle": "^0.11.0",
     "rimraf": "^3.0.2"
   },
   "jest": {
     "collectCoverageFrom": [
-      "**/src/**/*.js",
-      "!**/__test_utils__/**"
+      "**/src/**/*.js"
     ],
     "coverageThreshold": {
       "global": {
