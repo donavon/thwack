@@ -25,7 +25,6 @@ export type Method =
   | 'POST'
   | 'put'
   | 'PUT'
-  | 'patch'
   | 'PATCH';
 
 export interface ThwackOptions extends RequestInit {
