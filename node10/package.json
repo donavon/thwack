@@ -1,0 +1,6 @@
+{
+  "types": "../types/index.d.ts",
+  "peerDependencies": {
+    "core-js": "^3.6.5"
+  }
+}

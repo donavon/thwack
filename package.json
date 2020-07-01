@@ -26,8 +26,8 @@
   },
   "files": [
     "dist",
-    "node.js",
-    "node10.js",
+    "node",
+    "node10",
     "README.md",
     "LICENSE",
     "package.json",
