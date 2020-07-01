@@ -113,7 +113,7 @@ const run = async () => {
         expect.objectContaining({
           headers: { 'content-type': 'application/json', ...defaultHeaders },
           body: JSON.stringify(fooBarData),
-          method: 'post',
+          method: 'POST',
         })
       );
     });
@@ -129,7 +129,7 @@ const run = async () => {
         expect.objectContaining({
           headers: { 'content-type': 'text/plain', ...defaultHeaders },
           body: 'this is plain text',
-          method: 'post',
+          method: 'POST',
         })
       );
       await thwack('http://foo.com/', {
@@ -142,7 +142,7 @@ const run = async () => {
         expect.objectContaining({
           headers: { 'content-type': 'application/json', ...defaultHeaders },
           body: JSON.stringify(fooBarData),
-          method: 'post',
+          method: 'POST',
         })
       );
     });
@@ -324,10 +324,10 @@ const run = async () => {
 
     describe('thwack convenience functions', () => {
       // eslint-disable-next-line no-restricted-syntax
-      for (const method of ['post', 'put', 'patch']) {
-        it(`thwack.${method}(name, data, options) defaults to ${method.toUpperCase()} and resolves with a ThwackResponse object`, async () => {
+      for (const method of ['POST', 'PUT', 'PATCH']) {
+        it(`thwack.${method.toLowerCase()}(name, data, options) defaults to ${method} and resolves with a ThwackResponse object`, async () => {
           const fetch = createMockFetch();
-          const data = await thwack[method]('http://foo.com/', 'data', {
+          const data = await thwack[method.toLowerCase()]('http://foo.com/', 'data', {
             fetch,
           });
           expect(fetch).toBeCalledWith(
@@ -346,10 +346,10 @@ const run = async () => {
       }
 
       // eslint-disable-next-line no-restricted-syntax
-      for (const method of ['get', 'delete', 'head']) {
-        it(`thwack.${method}(name, options) defaults to ${method.toUpperCase()} and resolves with a ThwackResponse object`, async () => {
+      for (const method of ['GET', 'DELETE', 'HEAD']) {
+        it(`thwack.${method.toLowerCase()}(name, options) defaults to ${method} and resolves with a ThwackResponse object`, async () => {
           const fetch = createMockFetch();
-          const data = await thwack[method]('http://foo.com/', { fetch });
+          const data = await thwack[method.toLowerCase()]('http://foo.com/', { fetch });
           expect(fetch).toBeCalledWith(
             'http://foo.com/',
             expect.objectContaining({
