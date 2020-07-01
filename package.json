@@ -4,7 +4,7 @@
     "access": "public",
     "tag": "latest"
   },
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "A tiny modern data fetching solution.",
   "main": "dist/thwack.js",
   "umd:main": "dist/thwack.umd.js",
