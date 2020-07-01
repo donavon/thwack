@@ -35,7 +35,7 @@ const fetcher = async function (options) {
 
   const fetchOptions = {
     ...(Object.keys(headers).length !== 0 && { headers }), // add if not empty object
-    ...(!!body && { body, method: 'post' }), // if body not empty add it and default method to POST
+    ...(!!body && { body, method: 'POST' }), // if body not empty add it and default method to POST
     ...rest,
   };
 
