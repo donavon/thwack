@@ -14,13 +14,15 @@ export const createThwack = function (defaults, parent) {
   instance.request = request.bind(instance);
 
   // Create convenience methods on this instance
-  ['get', 'delete', 'head'].forEach((method) => {
-    instance[method] = (url, options) =>
+  ['GET', 'DELETE', 'HEAD'].forEach((method) => {
+    const methodKey = method.toLowerCase();
+    instance[methodKey] = (url, options) =>
       instance.request({ ...options, method, url });
   });
 
-  ['put', 'post', 'patch'].forEach((method) => {
-    instance[method] = (url, data, options) =>
+  ['PUT', 'POST', 'PATCH'].forEach((method) => {
+    const methodKey = method.toLowerCase();
+    instance[methodKey] = (url, data, options) =>
       instance.request({ ...options, method, url, data });
   });
 
