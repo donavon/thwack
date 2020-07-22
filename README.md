@@ -744,6 +744,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="https:///www.blakeyoder.com"><img src="https://avatars0.githubusercontent.com/u/5393338?v=4" width="100px;" alt=""/><br /><sub><b>Blake Yoder</b></sub></a><br /><a href="https://github.com/donavon/thwack/commits?author=blakeyoder" title="Code">💻</a></td>
     <td align="center"><a href="http://www.ryanhinchey.co"><img src="https://avatars0.githubusercontent.com/u/3943764?v=4" width="100px;" alt=""/><br /><sub><b>Ryan Hinchey</b></sub></a><br /><a href="https://github.com/donavon/thwack/commits?author=ryhinchey" title="Documentation">📖</a></td>
     <td align="center"><a href="https://github.com/MiroDojkic"><img src="https://avatars2.githubusercontent.com/u/9119913?v=4" width="100px;" alt=""/><br /><sub><b>Miro Dojkic</b></sub></a><br /><a href="https://github.com/donavon/thwack/commits?author=MiroDojkic" title="Code">💻</a></td>
+    <td align="center"><a href="https://github.com/santicevic"><img src="https://avatars3.githubusercontent.com/u/45316219?v=4" width="100px;" alt=""/><br /><sub><b>santicevic</b></sub></a><br /><a href="https://github.com/donavon/thwack/commits?author=santicevic" title="Documentation">📖</a> <a href="https://github.com/donavon/thwack/commits?author=santicevic" title="Code">💻</a></td>
   </tr>
 </table>
 

@@ -120,6 +120,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "santicevic",
+      "name": "santicevic",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/45316219?v=4",
+      "profile": "https://github.com/santicevic",
+      "contributions": [
+        "doc",
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
