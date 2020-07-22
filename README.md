@@ -247,7 +247,7 @@ What is returned by Thwack is determined by the following table. The "fetch meth
 | :-------------------: | :------------: | :------------------------------------------------------: |
 |  `application/json`   |     `json`     |                    `response.json()`                     |
 | `multipart/form-data` |   `formdata`   |                  `response.formData()`                   |
-|                       |    `stream`    | passes back `response.body` as `data` without processing |
+| `text/event-stream` |    `stream`    | passes back `response.body` as `data` without processing |
 |                       |     `blob`     |                    `response.blob()`                     |
 |                       | `arraybuffer`  |                 `response.arrayBuffer()`                 |
 |         `*/*`         |     `text`     |                    `response.text()`                     |
