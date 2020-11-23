@@ -29,9 +29,9 @@ const run = async () => {
       });
       it('callbacks can return new options', async () => {
         const fetch = createMockFetch();
-        const callback = (event) => {
-          const options = { ...event.options, url: 'http://bob.com/' };
-          return options;
+        const callback = (e) => {
+          const options = { ...e.options, url: 'http://bob.com/' };
+          e.setPayload(options);
         };
         const options = {
           url: 'http://foo.com',
@@ -50,9 +50,9 @@ const run = async () => {
       });
       it('callbacks must return a valid options object', async () => {
         const fetch = createMockFetch();
-        const callback = () => {
+        const callback = (e) => {
           const options = 'bob';
-          return options;
+          e.setPayload(options);
         };
         const options = {
           url: 'http://foo.com',
@@ -72,10 +72,10 @@ const run = async () => {
       });
       it('async callbacks can alter options', async () => {
         const fetch = createMockFetch();
-        const callback = async (event) => {
+        const callback = async (e) => {
           await sleep(100);
-          const options = { ...event.options, url: 'http://bob.com' };
-          return options;
+          const options = { ...e.options, url: 'http://bob.com' };
+          e.setPayload(options);
         };
         const options = {
           url: 'http://foo.com',
@@ -96,11 +96,11 @@ const run = async () => {
         const fetch = createMockFetch();
         const callback1 = jest.fn((e) => {
           const options = { ...e.options, url: `${e.options.url}bar` };
-          return options;
+          e.setPayload(options);
         });
         const callback2 = jest.fn((e) => {
           const options = { ...e.options, url: `${e.options.url}bar` };
-          return options;
+          e.setPayload(options);
         });
         thwack.addEventListener('request', callback1);
         thwack.addEventListener('request', callback2);
@@ -124,11 +124,11 @@ const run = async () => {
         const callback1 = jest.fn((e) => {
           const options = { ...e.options, url: `${e.options.url}bar` };
           e.stopPropagation();
-          return options;
+          e.setPayload(options);
         });
         const callback2 = jest.fn((e) => {
           const options = { ...e.options, url: `${e.options.url}bar` };
-          return options;
+          e.setPayload(options);
         });
         thwack.addEventListener('request', callback1);
         thwack.addEventListener('request', callback2);
@@ -177,11 +177,11 @@ const run = async () => {
         const callback1 = jest.fn((e) => {
           const options = { ...e.options, url: `${e.options.url}bar` };
           e.stopPropagation();
-          return options;
+          e.setPayload(options);
         });
         const callback2 = jest.fn((e) => {
           const options = { ...e.options, url: `${e.options.url}bar` };
-          return options;
+          e.setPayload(options);
         });
         thwack.addEventListener('request', callback1);
         instance.addEventListener('request', callback2);
@@ -207,15 +207,15 @@ const run = async () => {
         const instancec = instanceb.create();
         const callbacka = (e) => {
           const options = { ...e.options, url: `${e.options.url}/a` };
-          return options;
+          e.setPayload(options);
         };
         const callbackb = (e) => {
           const options = { ...e.options, url: `${e.options.url}/b` };
-          return options;
+          e.setPayload(options);
         };
         const callbackc = (e) => {
           const options = { ...e.options, url: `${e.options.url}/c` };
-          return options;
+          e.setPayload(options);
         };
         thwack.addEventListener('request', callbacka);
         instanceb.addEventListener('request', callbackb);
@@ -240,16 +240,16 @@ const run = async () => {
         const instancec = instanceb.create();
         const callbacka = async (e) => {
           const options = { ...e.options, url: `${e.options.url}/a` };
-          return options;
+          e.setPayload(options);
         };
         const callbackb = async (e) => {
           await sleep(100);
           const options = { ...e.options, url: `${e.options.url}/b` };
-          return options;
+          e.setPayload(options);
         };
         const callbackc = (e) => {
           const options = { ...e.options, url: `${e.options.url}/c` };
-          return options;
+          e.setPayload(options);
         };
         thwack.addEventListener('request', callbacka);
         instanceb.addEventListener('request', callbackb);
@@ -275,15 +275,15 @@ const run = async () => {
         const callbacka = jest.fn((e) => {
           const options = { ...e.options, url: `${e.options.url}/a` };
           e.stopPropagation();
-          return options;
+          e.setPayload(options);
         });
         const callbackb = jest.fn((e) => {
           const options = { ...e.options, url: `${e.options.url}/b` };
-          return options;
+          e.setPayload(options);
         });
         const callbackc = jest.fn((e) => {
           const options = { ...e.options, url: `${e.options.url}/c` };
-          return options;
+          e.setPayload(options);
         });
         thwack.addEventListener('request', callbacka);
         instanceb.addEventListener('request', callbackb);
@@ -311,7 +311,7 @@ const run = async () => {
           // e.promise = Promise.resolve('preventDefault');
           e.preventDefault();
           const { options } = e;
-          return new ThwackResponse(
+          const resp = new ThwackResponse(
             {
               ok: true,
               status: 200,
@@ -320,6 +320,7 @@ const run = async () => {
             },
             options
           );
+          e.setPayload(resp);
         };
         const callback2 = () => {};
         thwack.addEventListener('request', callback);
@@ -336,9 +337,9 @@ const run = async () => {
       it('a callback that calls preventDefault() must return a ThwackResponse', async () => {
         const fetch = createMockFetch();
         const callback = async (e) => {
-          // e.promise = Promise.resolve('preventDefault');
           e.preventDefault();
-          return 'foofoofoo';
+          const resp = 'foofoofoo';
+          e.setPayload(resp);
         };
         const callback2 = () => {};
         thwack.addEventListener('request', callback);
@@ -361,7 +362,8 @@ const run = async () => {
           // e.promise = Promise.resolve('preventDefault');
           e.preventDefault();
           const { options } = e;
-          return new ThwackResponse({}, options);
+          const resp = new ThwackResponse({}, options);
+          e.setPayload(resp);
         };
         const callback2 = () => {};
         thwack.addEventListener('request', callback);
@@ -398,10 +400,11 @@ const run = async () => {
           // await sleep(100);
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new ThwackResponse(
+          const resp = new ThwackResponse(
             { ok: true, status: 200, data: 'mock response' },
             options
           );
+          e.setPayload(resp);
         };
         thwack.addEventListener('response', callback);
         const resp = await thwack('http://foo.com', {
@@ -417,10 +420,11 @@ const run = async () => {
           await sleep(100);
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new ThwackResponse(
+          const resp = new ThwackResponse(
             { ok: true, status: 200, data: 'mock response' },
             options
           );
+          e.setPayload(resp);
         };
         thwack.addEventListener('response', callback);
         const resp = await thwack('http://foo.com', {
@@ -436,7 +440,11 @@ const run = async () => {
           // await sleep(100);
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new ThwackResponse({ status: 409, data: 'boo!' }, options);
+          const resp = new ThwackResponse(
+            { status: 409, data: 'boo!' },
+            options
+          );
+          e.setPayload(resp);
         };
         thwack.addEventListener('response', callback);
         try {
@@ -457,7 +465,8 @@ const run = async () => {
           // await sleep(100);
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new ThwackResponse({ status: 409 }, options);
+          const resp = new ThwackResponse({ status: 409 }, options);
+          e.setPayload(resp);
         };
         thwack.addEventListener('response', callback);
         try {
@@ -475,7 +484,8 @@ const run = async () => {
         const fetch = createMockFetch();
         const callback = async (e) => {
           e.preventDefault();
-          return 'fred';
+          const resp = 'fred';
+          e.setPayload(resp);
         };
         thwack.addEventListener('response', callback);
         try {
@@ -493,10 +503,11 @@ const run = async () => {
         const fetch = createMockFetch();
         const callback = async (e) => {
           e.preventDefault();
-          return thwack('http://foo.com', {
+          const resp = await thwack('http://foo.com', {
             fetch,
             foo: 'bar',
           });
+          e.setPayload(resp);
         };
         thwack.addEventListener('response', callback);
         try {
@@ -533,10 +544,11 @@ const run = async () => {
           // await sleep(100);
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new ThwackResponse(
+          const resp = new ThwackResponse(
             { ok: true, status: 200, data: 'mock response' },
             options
           );
+          e.setPayload(resp);
         };
         thwack.addEventListener('data', callback);
         const resp = await thwack('http://foo.com', {
@@ -552,10 +564,11 @@ const run = async () => {
           await sleep(100);
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new ThwackResponse(
+          const resp = new ThwackResponse(
             { ok: true, status: 200, data: 'mock response' },
             options
           );
+          e.setPayload(resp);
         };
         thwack.addEventListener('data', callback);
         const resp = await thwack('http://foo.com', {
@@ -571,7 +584,11 @@ const run = async () => {
           // await sleep(100);
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new ThwackResponse({ status: 409, data: 'boo!' }, options);
+          const resp = new ThwackResponse(
+            { status: 409, data: 'boo!' },
+            options
+          );
+          e.setPayload(resp);
         };
         thwack.addEventListener('data', callback);
         try {
@@ -592,7 +609,8 @@ const run = async () => {
           // await sleep(100);
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new ThwackResponse({ status: 409 }, options);
+          const resp = new ThwackResponse({ status: 409 }, options);
+          e.setPayload(resp);
         };
         thwack.addEventListener('data', callback);
         try {
@@ -610,7 +628,8 @@ const run = async () => {
         const fetch = createMockFetch();
         const callback = async (e) => {
           e.preventDefault();
-          return 'fred';
+          const resp = 'fred';
+          e.setPayload(resp);
         };
         thwack.addEventListener('data', callback);
         try {
@@ -628,10 +647,11 @@ const run = async () => {
         const fetch = createMockFetch();
         const callback = async (e) => {
           e.preventDefault();
-          return thwack('http://foo.com', {
+          const resp = await thwack('http://foo.com', {
             fetch,
             foo: 'bar',
           });
+          e.setPayload(resp);
         };
         thwack.addEventListener('data', callback);
         try {
@@ -672,10 +692,11 @@ const run = async () => {
         const callback = (e) => {
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new ThwackResponse(
+          const resp = new ThwackResponse(
             { status: 200, data: 'mock response' },
             options
           );
+          e.setPayload(resp);
         };
         thwack.addEventListener('error', callback);
         const resp = await thwack('http://foo.com', {
@@ -690,7 +711,8 @@ const run = async () => {
         const callback = (e) => {
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new ThwackResponse({ data: 'mock response' }, options);
+          const resp = new ThwackResponse({ data: 'mock response' }, options);
+          e.setPayload(resp);
         };
         thwack.addEventListener('error', callback);
         const resp = await thwack('http://foo.com', {
@@ -706,10 +728,11 @@ const run = async () => {
           await sleep(100);
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new ThwackResponse(
+          const resp = new ThwackResponse(
             { ok: true, status: 200, data: 'mock response' },
             options
           );
+          e.setPayload(resp);
         };
         thwack.addEventListener('error', callback);
         const resp = await thwack('http://foo.com', {
@@ -725,7 +748,11 @@ const run = async () => {
           // await sleep(100);
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new ThwackResponse({ status: 409, data: 'boo!' }, options);
+          const resp = new ThwackResponse(
+            { status: 409, data: 'boo!' },
+            options
+          );
+          e.setPayload(resp);
         };
         thwack.addEventListener('error', callback);
         try {
@@ -747,7 +774,8 @@ const run = async () => {
           // await sleep(100);
           e.preventDefault();
           const { options } = e.thwackResponse;
-          return new ThwackResponse({ status: 409 }, options);
+          const resp = new ThwackResponse({ status: 409 }, options);
+          e.setPayload(resp);
         };
         thwack.addEventListener('error', callback);
         try {
@@ -765,7 +793,8 @@ const run = async () => {
         const fetch = createMockFetch({ status: 500 });
         const callback = async (e) => {
           e.preventDefault();
-          return 'fred';
+          const resp = 'fred';
+          e.setPayload(resp);
         };
         thwack.addEventListener('error', callback);
         try {
@@ -783,10 +812,11 @@ const run = async () => {
         const fetch = createMockFetch({ status: 500 });
         const callback = async (e) => {
           e.preventDefault();
-          return thwack('http://foo.com', {
+          const resp = await thwack('http://foo.com', {
             fetch,
             foo: 'bar',
           });
+          e.setPayload(resp);
         };
         thwack.addEventListener('error', callback);
         try {

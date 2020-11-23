@@ -14,4 +14,8 @@ export default class ThwackEvent {
   stopPropagation() {
     this.propagationStopped = true;
   }
+
+  setPayload(payload) {
+    this._payload = payload;
+  }
 }

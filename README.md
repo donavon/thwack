@@ -27,7 +27,7 @@ Thwack is:
 - ✨ Support for NodeJS 10 and 12
 - 📱 Support for React Native
 
-> This README is a work in progress. You can also ask me a question [on Twitter](https://twitter.com/donavon).
+> Note: Read [important note](#breaking-change) about a breaking change in v0.7
 
 <h2>
 <img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
@@ -42,6 +42,33 @@ or
 
 ```bash
 $ yarn add thwack
+```
+
+<h2>
+<img alt="Thwack logo" src="https://user-images.githubusercontent.com/887639/79779619-a8037f80-8308-11ea-8c4d-e7193fa15ae8.png" width="22">
+Breaking Change in v0.7?<a name="breaking-change"></a>
+</h2>
+
+Starting with v0.7, a Thwack listener no longer returns new information, but instead calls `event.setPayload()` with the new data. This is because TypeScript does not allow return data from event listeners.
+
+Old:
+
+```js
+thwack.addEventListener('request', async (event) => {
+  const { options } = event;
+  const resp = new thwack.ThwackResponse({ data: fakeData }, options);
+  return resp;
+});
+```
+
+New:
+
+```js
+thwack.addEventListener('request', async (event) => {
+  const { options } = event;
+  const resp = new thwack.ThwackResponse({ data: fakeData }, options);
+  event.setPayload(resp);
+});
 ```
 
 <h2>
@@ -247,7 +274,7 @@ What is returned by Thwack is determined by the following table. The "fetch meth
 | :-------------------: | :------------: | :------------------------------------------------------: |
 |  `application/json`   |     `json`     |                    `response.json()`                     |
 | `multipart/form-data` |   `formdata`   |                  `response.formData()`                   |
-| `text/event-stream` |    `stream`    | passes back `response.body` as `data` without processing |
+|  `text/event-stream`  |    `stream`    | passes back `response.body` as `data` without processing |
 |                       |     `blob`     |                    `response.blob()`                     |
 |                       | `arraybuffer`  |                 `response.arrayBuffer()`                 |
 |         `*/*`         |     `text`     |                    `response.text()`                     |
@@ -616,7 +643,7 @@ thwack.addEventListener('request', async (event) => {
 
     // because we called `preventDefault` above, the caller's request
     // will be resolved to this `ThwackResponse` (defaults to status of 200 and ok)
-    return new thwack.ThwackResponse(
+    const resp = new thwack.ThwackResponse(
       {
         data: {
           name: 'Fake Username',
@@ -625,6 +652,7 @@ thwack.addEventListener('request', async (event) => {
       },
       options
     );
+    event.setPayload(resp);
   }
 });
 ```
@@ -692,7 +720,8 @@ thwack.addEventListener('request', (event) => {
   const url = new URL('', oldUrl);
   url.origin = 'https://api2.example.com'; // point the origin at the new servers
   const newUrl = url.href; // Get the fully qualified URL
-  event.options = { ...event.options, url: newUrl }; // replace `options`]
+  const options = { ...event.options, url: newUrl }; // replace `options`]
+  event.setPayload(options);
 });
 ```
 
@@ -750,6 +779,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
+
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

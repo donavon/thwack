@@ -65,7 +65,9 @@ export interface ThwackResponseError extends Error {
   thwackResponse: ThwackResponse;
 }
 
-export interface ThwackEvent extends Event {}
+export interface ThwackEvent extends Event {
+  setPayload: (payload: any) => void;
+}
 export interface ThwackResponseBaseEvent extends ThwackEvent {
   thwackResponse: ThwackResponse;
 }

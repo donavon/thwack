@@ -2,9 +2,9 @@
   "name": "thwack",
   "publishConfig": {
     "access": "public",
-    "tag": "latest"
+    "tag": "next"
   },
-  "version": "0.6.1",
+  "version": "0.7.0-beta.1",
   "description": "A tiny modern data fetching solution.",
   "main": "dist/thwack.js",
   "umd:main": "dist/thwack.umd.js",
