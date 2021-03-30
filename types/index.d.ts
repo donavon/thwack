@@ -36,6 +36,7 @@ export interface ThwackOptions extends RequestInit {
   data?: any; // The data that you would like to send. Not valid for GET and HEAD methods.
   responseParserMap?: KeyValue;
   responseType?: ResponseType;
+  headers?: KeyValue | Headers;
 }
 
 interface ThwackSyntheticResponse<T = any> {
