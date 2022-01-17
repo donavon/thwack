@@ -52,7 +52,7 @@
   "author": "Donavon West <github@donavon.com> (https://github.com/donavon)",
   "dependencies": {
     "@thwack/resolve": "^1.0.0",
-    "core-js": "^3.6.5",
+    "core-js": "^3.20.1",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
